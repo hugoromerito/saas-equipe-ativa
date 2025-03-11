@@ -75,13 +75,20 @@ This project contain all the necessary boilerplate to setup a multi-tenant SaaS 
 - [ ] Deve ser capaz de autenticar usando telefone/whatsapp e código verificador;
 - [ ] Deve ser capaz de criar uma conta (nome, cpf, título, telefone, endereço e observações);
 
+### Organização (Algo como Equipe Nuna do Waguinho ou Deputado Waguinho)
+
+- [ ] Deve ser capaz de criar uma nova unidade;
+- [ ] Deve ser capaz de atualizar uma unidade;
+- [ ] Deve ser capaz de deletar uma organização;
+- [ ] Deve ser capaz de obter as organizações às quais o usuário pertence;
+- [ ] Deve ser capaz de transferir a propriedade da organização;
+
 ### Unidades
 
 - [ ] Deve ser capaz de criar uma nova unidade;
 - [ ] Deve ser capaz de atualizar uma unidade;
 - [ ] Deve ser capaz de deletar uma unidade;
 - [ ] Deve ser capaz de obter unidades às quais o usuário pertence;
-- [ ] Deve ser capaz de transferir a propriedade da unidade;
 
 ### Convites
 
@@ -118,18 +125,20 @@ This project contain all the necessary boilerplate to setup a multi-tenant SaaS 
 
 ### Tabela de Permissões
 
-|                           | Administrador | Gerente | Escriturário | Analista | Solicitante | Faturamento | Anônimo |
-| ------------------------- | ------------- | ------- | ------------ | -------- | ----------- | ----------- | ------- |
-| Criar unidade             | ✅            | ❌      | ❌           | ❌       | ❌          | ❌          | ❌      |
-| Atualizar unidade         | ✅            | ❌      | ❌           | ❌       | ❌          | ❌          | ❌      |
-| Excluir unidade           | ✅            | ❌      | ❌           | ❌       | ❌          | ❌          | ❌      |
-| Visualizar unidades       | ✅            | ⚠️      | ❌           | ❌       | ❌          | ❌          | ❌      |
-| Convidar membro           | ✅            | ✅      | ❌           | ❌       | ❌          | ❌          | ❌      |
-| Revogar convite           | ✅            | ✅      | ❌           | ❌       | ❌          | ❌          | ❌      |
-| Listar membros            | ✅            | ⚠️      | ❌           | ❌       | ❌          | ❌          | ❌      |
-| Transferir propriedade    | ✅            | ❌      | ❌           | ❌       | ❌          | ❌          | ❌      |
-| Atualizar cargo de membro | ✅            | ❌      | ❌           | ❌       | ❌          | ❌          | ❌      |
-| Deletar membro            | ✅            | ⚠️      | ❌           | ❌       | ❌          | ❌          | ❌      |
-| Criar demanda             | ✅            | ✅      | ✅           | ❌       | ❌          | ❌          | ❌      |
-| Atualizar demandas        | ✅            | ⚠️      | ❌           | ✅       | ❌          | ❌          | ❌      |
-| Listar demandas           | ✅            | ⚠️      | ❌           | ✅       | ⚠️          | ❌          | ❌      |
+|                                   | Administrador | Gestor | Assistente | Analista | Solicitante | Faturamento | Anônimo |
+| --------------------------------- | ------------- | ------ | ---------- | -------- | ----------- | ----------- | ------- |
+| Criar unidade                     | ✅            | ❌     | ❌         | ❌       | ❌          | ❌          | ❌      |
+| Atualizar unidade                 | ✅            | ❌     | ❌         | ❌       | ❌          | ❌          | ❌      |
+| Excluir unidade                   | ✅            | ❌     | ❌         | ❌       | ❌          | ❌          | ❌      |
+| Visualizar unidades               | ✅            | ⚠️     | ❌         | ❌       | ❌          | ❌          | ❌      |
+| Convidar membro                   | ✅            | ✅     | ❌         | ❌       | ❌          | ❌          | ❌      |
+| Revogar convite                   | ✅            | ✅     | ❌         | ❌       | ❌          | ❌          | ❌      |
+| Listar membros                    | ✅            | ⚠️     | ❌         | ❌       | ❌          | ❌          | ❌      |
+| Deletar membro                    | ✅            | --     | ❌         | ❌       | ❌          | ❌          | ❌      |
+| Transferir propriedade            | ✅            | ❌     | ❌         | ❌       | ❌          | ❌          | ❌      |
+| Atualizar cargo de membro         | ✅            | ❌     | ❌         | ❌       | ❌          | ❌          | ❌      |
+| Cadastrar solicitante (População) | ✅            | ✅     | ✅         | ❌       | ❌          | ❌          | ❌      |
+| Atualizar cadastro de solicitante | ✅            | ✅     | ✅         | ❌       | ❌          | ❌          | ❌      |
+| Criar demanda                     | ✅            | ✅     | ✅         | ❌       | ❌          | ❌          | ❌      |
+| Atualizar demandas                | ✅            | ⚠️     | ❌         | ✅       | ❌          | ❌          | ❌      |
+| Listar demandas                   | ✅            | ⚠️     | ❌         | ✅       | ⚠️          | ❌          | ❌      |

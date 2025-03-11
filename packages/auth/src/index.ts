@@ -13,6 +13,7 @@ import { demandSubject } from './subjects/demand'
 import { inviteSubject } from './subjects/invite'
 import { unitSubject } from './subjects/unit'
 import { userSubject } from './subjects/user'
+import { organizationSubject } from './subjects/organization'
 
 export * from './models/user'
 export * from './models/demand'
@@ -24,7 +25,7 @@ const appAbilities = z.union([
   demandSubject,
   inviteSubject,
   billingSubject,
-
+  organizationSubject,
   z.tuple([z.literal('manage'), z.literal('all')]),
 ])
 

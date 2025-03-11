@@ -1,6 +1,7 @@
 import { AbilityBuilder } from '@casl/ability'
 
 import { AppAbility } from '.'
+
 import { User } from './models/user'
 import { Role } from './roles'
 
@@ -12,9 +13,11 @@ type PermissionsByRole = (
 export const permissions: Record<Role, PermissionsByRole> = {
   ADMIN: (user, { can, cannot }) => {
     can('manage', 'all')
-
     cannot(['transfer_ownership', 'update'], 'Unit')
     can(['transfer_ownership', 'update'], 'Unit', { ownerId: { $eq: user.id } })
+    can(['transfer_ownership', 'update'], 'Organization', {
+      ownerId: { $eq: user.id },
+    })
   },
   MANAGER: (user, { can, cannot }) => {
     can('create', 'Demand') // Pode criar demandas

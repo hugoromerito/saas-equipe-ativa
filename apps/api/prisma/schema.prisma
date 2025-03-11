@@ -1,0 +1,212 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String   @id @default(uuid())
+  name            String?
+  email           String   @unique
+  passwordHash    String?  @map("password_hash")
+  birthdate       String?
+  cpf             String?
+  mother          String?
+  father          String?
+  phone           String?
+  attachment      String?
+  ticket          String?
+  zone            String?
+  section         String?
+  ticketOrigin    String?  @map("ticket_origin")
+  ticketSituation String?  @map("ticket_situation")
+  ticketEmission  String?  @map("ticket_emission")
+  observation     String?
+  travelStatus    String?  @map("travel_status")
+  guideId         String?  @map("guide_id")
+  avatarUrl       String?  @map("avatar_url")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  tokens             Token[]
+  accounts           Account[]
+  invites            Invite[]
+  member_on          Member[]
+  owns_organizations Organization[]
+  owns_demands       Demand[]
+
+  @@map("users")
+}
+
+enum TokenType {
+  PASSWORD_RECOVER
+}
+
+model Token {
+  id        String    @id @default(uuid())
+  type      TokenType
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  @@map("tokens")
+}
+
+enum AccountProvider {
+  GOOGLE
+  FACEBOOK
+  GITHUB
+}
+
+model Account {
+  id                String          @id @default(uuid())
+  provider          AccountProvider
+  providerAccountId String          @unique @map("provider_account_id")
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  @@unique([provider, userId])
+  @@map("accounts")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  CLERK
+  ANALYST
+  APPLICANT // Solicitante das demandas, sem acesso ao sistema como usuários
+  BILLING
+}
+
+model Invite {
+  id        String   @id @default(uuid())
+  email     String
+  role      Role
+  createdAt DateTime @default(now()) @map("created_at")
+
+  author User?   @relation(fields: [userId], references: [id])
+  userId String? @map("user_id")
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String       @map("organization_id")
+
+  unit   Unit   @relation(fields: [unitId], references: [id])
+  unitId String @map("unit_id")
+
+  @@unique([email, organizationId, unitId])
+  @@index([email])
+  @@map("invites")
+}
+
+model Member {
+  id   String @id @default(uuid())
+  role Role   @default(APPLICANT)
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String       @map("organization_id")
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  unit   Unit   @relation(fields: [unitId], references: [id])
+  unitId String @map("unit_id")
+
+  @@unique([userId, organizationId, unitId])
+  @@map("members")
+}
+
+model Organization {
+  id                       String   @id @default(uuid())
+  name                     String
+  slug                     String   @unique
+  domain                   String?  @unique
+  shoultAttachUserByDomain Boolean  @default(false) @map("should_attach_user_by_domain")
+  avatarUrl                String?  @map("avatar_url")
+  createdAt                DateTime @default(now()) @map("created_at")
+  updatedAt                DateTime @updatedAt @map("updated_at")
+
+  owner  User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  invites Invite[]
+  members Member[]
+
+  @@map("organizations")
+}
+
+enum DemandStatus {
+  PENDING // Aguardando atendimento
+  IN_PROGRESS // Em andamento
+  RESOLVED // Resolvida
+  REJECTED // Rejeitada (não atende critérios)
+}
+
+enum DemandPriority {
+  LOW // Baixa
+  MEDIUM // Média
+  HIGH // Alta
+  URGENT // Urgente
+}
+
+enum DemandCategory {
+  INFRASTRUCTURE // Infraestrutura e Serviços Públicos
+  HEALTH // Saúde Pública
+  EDUCATION // Educação e Creches
+  SOCIAL_ASSISTANCE // Assistência Social
+  PUBLIC_SAFETY // Segurança Pública
+  TRANSPORTATION // Transporte e Mobilidade
+  EMPLOYMENT // Emprego e Desenvolvimento Econômico
+  CULTURE // Cultura, Esporte e Lazer
+  ENVIRONMENT // Meio Ambiente e Sustentabilidade
+  HUMAN_RIGHTS // Direitos Humanos e Cidadania
+  TECHNOLOGY // Tecnologia e Inovação
+}
+
+model Demand {
+  id          String         @id @default(uuid())
+  title       String
+  description String
+  status      DemandStatus
+  priority    DemandPriority
+  category    DemandCategory
+  location    String?
+  attachment  String?
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+
+  owner  User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  unit   Unit?   @relation(fields: [unitId], references: [id])
+  unitId String? @map("unit_id")
+
+  @@map("demands")
+}
+
+model Billing {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("billings")
+}
+
+model Unit {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  location    String
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  invites Invite[]
+  members Member[]
+  demands Demand[]
+
+  @@map("units")
+}
