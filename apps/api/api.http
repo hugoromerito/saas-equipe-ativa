@@ -1,0 +1,17 @@
+POST http://localhost:3333/users
+Content-Type: application/json
+ 
+{
+  "name": "Hugo",
+  "email": "hugo@gmail.com",
+  "password": "romerito",
+  "birthdate": "21/11/2000",
+  "ticket": "123456789012",
+  "cpf": "12345678901",
+  "mother": "Fernanda",
+  "father": "Luciano",
+  "phone": "12345678901",
+  "observation": "observação"
+}
+
+###
