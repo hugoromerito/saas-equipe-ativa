@@ -137,7 +137,7 @@ model Apliccant {
   cpf             String   @unique
   mother          String?
   father          String?
-  attachment      String?
+  attachment      String? // Frente e verso
   ticket          String?  @unique
   zone            String?
   section         String?
@@ -191,7 +191,7 @@ model Demand {
   priority    DemandPriority
   category    DemandCategory
   location    String?
-  attachment  String?
+  attachment  String? //  Antes e depois
   createdAt   DateTime       @default(now()) @map("created_at")
   updatedAt   DateTime       @updatedAt @map("updated_at")
 

@@ -130,9 +130,9 @@ This project contain all the necessary boilerplate to setup a multi-tenant SaaS 
 | Criar unidade                     | ✅            | ❌     | ❌         | ❌       | ❌          | ❌          | ❌      |
 | Atualizar unidade                 | ✅            | ❌     | ❌         | ❌       | ❌          | ❌          | ❌      |
 | Excluir unidade                   | ✅            | ❌     | ❌         | ❌       | ❌          | ❌          | ❌      |
-| Visualizar unidades               | ✅            | ⚠️     | ❌         | ❌       | ❌          | ❌          | ❌      |
-| Convidar membro                   | ✅            | ✅     | ❌         | ❌       | ❌          | ❌          | ❌      |
-| Revogar convite                   | ✅            | ✅     | ❌         | ❌       | ❌          | ❌          | ❌      |
+| Visualizar unidades               | ✅            | ❌     | ❌         | ❌       | ❌          | ❌          | ❌      |
+| Convidar membro                   | ✅            | ❌     | ❌         | ❌       | ❌          | ❌          | ❌      |
+| Revogar convite                   | ✅            | ❌     | ❌         | ❌       | ❌          | ❌          | ❌      |
 | Listar membros                    | ✅            | ⚠️     | ❌         | ❌       | ❌          | ❌          | ❌      |
 | Deletar membro                    | ✅            | --     | ❌         | ❌       | ❌          | ❌          | ❌      |
 | Transferir propriedade            | ✅            | ❌     | ❌         | ❌       | ❌          | ❌          | ❌      |
@@ -140,5 +140,5 @@ This project contain all the necessary boilerplate to setup a multi-tenant SaaS 
 | Cadastrar solicitante (População) | ✅            | ✅     | ✅         | ❌       | ❌          | ❌          | ❌      |
 | Atualizar cadastro de solicitante | ✅            | ✅     | ✅         | ❌       | ❌          | ❌          | ❌      |
 | Criar demanda                     | ✅            | ✅     | ✅         | ❌       | ❌          | ❌          | ❌      |
-| Atualizar demandas                | ✅            | ⚠️     | ❌         | ✅       | ❌          | ❌          | ❌      |
-| Listar demandas                   | ✅            | ⚠️     | ❌         | ✅       | ⚠️          | ❌          | ❌      |
+| Atualizar status demandas         | ✅            | ⚠️     | ❌         | ✅       | ❌          | ❌          | ❌      |
+| Visualizar demandas               | ✅            | ⚠️     | ❌         | ✅       | ⚠️          | ❌          | ❌      |
