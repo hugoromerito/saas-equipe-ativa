@@ -68,7 +68,7 @@ This project contain all the necessary boilerplate to setup a multi-tenant SaaS 
 - [ ] Deve ser capaz de autenticar usando e-mail e senha;
 - [ ] Deve ser capaz de autenticar usando conta do Google;
 - [ ] Deve ser capaz de recuperar senha usando e-mail;
-- [ ] Deve ser capaz de criar uma conta (e-mail, nome, cpf, título, telefone, endereço e senha);
+- [x] Deve ser capaz de criar uma conta (e-mail, nome e senha);
 
 ### Autenticação para solicitantes
 
