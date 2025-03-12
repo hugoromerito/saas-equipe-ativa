@@ -1,7 +1,7 @@
 import { compare } from 'bcryptjs'
 import { type FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
-import z from 'zod'
+import { z } from 'zod'
 
 import { prisma } from '@/lib/prisma'
 
@@ -16,6 +16,14 @@ export async function authenticateWithPassword(app: FastifyInstance) {
           email: z.string().email(),
           password: z.string(),
         }),
+        response: {
+          400: z.object({
+            message: z.string(),
+          }),
+          201: z.object({
+            token: z.string(),
+          }),
+        },
       },
     },
     async (request, reply) => {
@@ -28,7 +36,7 @@ export async function authenticateWithPassword(app: FastifyInstance) {
       if (!userFromEmail) {
         return reply
           .status(400)
-          .send({ messagem: 'Invalid e-mail or password.' })
+          .send({ message: 'Invalid e-mail or password.' })
       }
 
       if (userFromEmail.passwordHash === null) {

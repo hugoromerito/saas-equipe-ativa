@@ -19,3 +19,9 @@ Content-Type: application/json
 }
 
 ###
+
+GET http://localhost:3333/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMDBjMDRiNC01ODQ3LTRjZTctOWExNi0xZDI2NWYyMzhlN2MiLCJpYXQiOjE3NDE4MjI1NzIsImV4cCI6MTc0MjQyNzM3Mn0.O-F9mwAtvVWgxZbskgLjPdTh5fPFiZRS3MS_QpdlFBM
+ 
+
+###
