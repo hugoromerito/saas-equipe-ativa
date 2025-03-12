@@ -5,7 +5,7 @@ CREATE TYPE "TokenType" AS ENUM ('PASSWORD_RECOVER');
 CREATE TYPE "AccountProvider" AS ENUM ('GOOGLE', 'FACEBOOK', 'GITHUB');
 
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('ADMIN', 'MANAGER', 'CLERK', 'ANALYST', 'APPLICANT', 'BILLING');
+CREATE TYPE "Role" AS ENUM ('ADMIN', 'MANAGER', 'CLERK', 'ANALYST', 'BILLING');
 
 -- CreateEnum
 CREATE TYPE "DemandStatus" AS ENUM ('PENDING', 'IN_PROGRESS', 'RESOLVED', 'REJECTED');
@@ -22,21 +22,6 @@ CREATE TABLE "users" (
     "name" TEXT,
     "email" TEXT NOT NULL,
     "password_hash" TEXT,
-    "birthdate" TEXT,
-    "cpf" TEXT,
-    "mother" TEXT,
-    "father" TEXT,
-    "phone" TEXT,
-    "attachment" TEXT,
-    "ticket" TEXT,
-    "zone" TEXT,
-    "section" TEXT,
-    "ticket_origin" TEXT,
-    "ticket_situation" TEXT,
-    "ticket_emission" TEXT,
-    "observation" TEXT,
-    "travel_status" TEXT,
-    "guide_id" TEXT,
     "avatar_url" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
@@ -80,10 +65,10 @@ CREATE TABLE "invites" (
 -- CreateTable
 CREATE TABLE "members" (
     "id" TEXT NOT NULL,
-    "role" "Role" NOT NULL DEFAULT 'APPLICANT',
+    "role" "Role" NOT NULL DEFAULT 'CLERK',
     "organization_id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
-    "unit_id" TEXT NOT NULL,
+    "unit_id" TEXT,
 
     CONSTRAINT "members_pkey" PRIMARY KEY ("id")
 );
@@ -94,13 +79,38 @@ CREATE TABLE "organizations" (
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "domain" TEXT,
-    "should_attach_user_by_domain" BOOLEAN NOT NULL DEFAULT false,
+    "should_attach_users_by_domain" BOOLEAN NOT NULL DEFAULT false,
     "avatar_url" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
-    "user_id" TEXT NOT NULL,
+    "owner_id" TEXT NOT NULL,
 
     CONSTRAINT "organizations_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "applicants" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "phone" TEXT NOT NULL,
+    "birthdate" TEXT,
+    "cpf" TEXT NOT NULL,
+    "mother" TEXT,
+    "father" TEXT,
+    "attachment" TEXT,
+    "ticket" TEXT,
+    "zone" TEXT,
+    "section" TEXT,
+    "ticket_origin" TEXT,
+    "ticket_situation" TEXT,
+    "ticket_emission" TEXT,
+    "observation" TEXT,
+    "avatar_url" TEXT,
+    "travel_status" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "applicants_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -115,8 +125,10 @@ CREATE TABLE "demands" (
     "attachment" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
-    "user_id" TEXT NOT NULL,
-    "unit_id" TEXT,
+    "unit_id" TEXT NOT NULL,
+    "member_id" TEXT NOT NULL,
+    "apliccant_id" TEXT NOT NULL,
+    "owner_id" TEXT NOT NULL,
 
     CONSTRAINT "demands_pkey" PRIMARY KEY ("id")
 );
@@ -134,10 +146,14 @@ CREATE TABLE "billings" (
 CREATE TABLE "units" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "domain" TEXT,
     "description" TEXT,
     "location" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
+    "organization_id" TEXT NOT NULL,
+    "owner_id" TEXT NOT NULL,
 
     CONSTRAINT "units_pkey" PRIMARY KEY ("id")
 );
@@ -166,6 +182,21 @@ CREATE UNIQUE INDEX "organizations_slug_key" ON "organizations"("slug");
 -- CreateIndex
 CREATE UNIQUE INDEX "organizations_domain_key" ON "organizations"("domain");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "applicants_phone_key" ON "applicants"("phone");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "applicants_cpf_key" ON "applicants"("cpf");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "applicants_ticket_key" ON "applicants"("ticket");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "units_slug_key" ON "units"("slug");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "units_domain_key" ON "units"("domain");
+
 -- AddForeignKey
 ALTER TABLE "tokens" ADD CONSTRAINT "tokens_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -188,13 +219,25 @@ ALTER TABLE "members" ADD CONSTRAINT "members_organization_id_fkey" FOREIGN KEY 
 ALTER TABLE "members" ADD CONSTRAINT "members_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "members" ADD CONSTRAINT "members_unit_id_fkey" FOREIGN KEY ("unit_id") REFERENCES "units"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "members" ADD CONSTRAINT "members_unit_id_fkey" FOREIGN KEY ("unit_id") REFERENCES "units"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "organizations" ADD CONSTRAINT "organizations_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "organizations" ADD CONSTRAINT "organizations_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "demands" ADD CONSTRAINT "demands_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "demands" ADD CONSTRAINT "demands_unit_id_fkey" FOREIGN KEY ("unit_id") REFERENCES "units"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "demands" ADD CONSTRAINT "demands_unit_id_fkey" FOREIGN KEY ("unit_id") REFERENCES "units"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "demands" ADD CONSTRAINT "demands_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "demands" ADD CONSTRAINT "demands_apliccant_id_fkey" FOREIGN KEY ("apliccant_id") REFERENCES "applicants"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "demands" ADD CONSTRAINT "demands_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "units" ADD CONSTRAINT "units_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "units" ADD CONSTRAINT "units_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

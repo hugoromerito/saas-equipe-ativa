@@ -8,34 +8,20 @@ datasource db {
 }
 
 model User {
-  id              String   @id @default(uuid())
-  name            String?
-  email           String   @unique
-  passwordHash    String?  @map("password_hash")
-  birthdate       String?
-  cpf             String?
-  mother          String?
-  father          String?
-  phone           String?
-  attachment      String?
-  ticket          String?
-  zone            String?
-  section         String?
-  ticketOrigin    String?  @map("ticket_origin")
-  ticketSituation String?  @map("ticket_situation")
-  ticketEmission  String?  @map("ticket_emission")
-  observation     String?
-  travelStatus    String?  @map("travel_status")
-  guideId         String?  @map("guide_id")
-  avatarUrl       String?  @map("avatar_url")
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  id           String   @id @default(uuid())
+  name         String?
+  email        String   @unique
+  passwordHash String?  @map("password_hash")
+  avatarUrl    String?  @map("avatar_url")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   tokens             Token[]
   accounts           Account[]
   invites            Invite[]
-  member_on          Member[]
+  member_on          Member[] //Registros de associação com organizações e unidades
   owns_organizations Organization[]
+  owns_units         Unit[]
   owns_demands       Demand[]
 
   @@map("users")
@@ -79,7 +65,6 @@ enum Role {
   MANAGER
   CLERK
   ANALYST
-  APPLICANT // Solicitante das demandas, sem acesso ao sistema como usuários
   BILLING
 }
 
@@ -89,6 +74,7 @@ model Invite {
   role      Role
   createdAt DateTime @default(now()) @map("created_at")
 
+  // A quem pertence o convite
   author User?   @relation(fields: [userId], references: [id])
   userId String? @map("user_id")
 
@@ -105,7 +91,7 @@ model Invite {
 
 model Member {
   id   String @id @default(uuid())
-  role Role   @default(APPLICANT)
+  role Role   @default(CLERK)
 
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String       @map("organization_id")
@@ -113,30 +99,60 @@ model Member {
   user   User   @relation(fields: [userId], references: [id])
   userId String @map("user_id")
 
-  unit   Unit   @relation(fields: [unitId], references: [id])
-  unitId String @map("unit_id")
+  unit   Unit?   @relation(fields: [unitId], references: [id])
+  unitId String? @map("unit_id")
+
+  // Demandas registradas por este membro
+  demands Demand[] // Relação 1:N ou seja, um membro pode ter várias demandas
 
   @@unique([userId, organizationId, unitId])
   @@map("members")
 }
 
 model Organization {
-  id                       String   @id @default(uuid())
-  name                     String
-  slug                     String   @unique
-  domain                   String?  @unique
-  shoultAttachUserByDomain Boolean  @default(false) @map("should_attach_user_by_domain")
-  avatarUrl                String?  @map("avatar_url")
-  createdAt                DateTime @default(now()) @map("created_at")
-  updatedAt                DateTime @updatedAt @map("updated_at")
+  id                        String   @id @default(uuid())
+  name                      String
+  slug                      String   @unique
+  domain                    String?  @unique
+  shouldAttachUsersByDomain Boolean  @default(false) @map("should_attach_users_by_domain")
+  avatarUrl                 String?  @map("avatar_url")
+  createdAt                 DateTime @default(now()) @map("created_at")
+  updatedAt                 DateTime @updatedAt @map("updated_at")
 
-  owner  User   @relation(fields: [userId], references: [id])
-  userId String @map("user_id")
+  owner   User   @relation(fields: [ownerId], references: [id])
+  ownerId String @map("owner_id")
 
   invites Invite[]
   members Member[]
+  units   Unit[]
 
   @@map("organizations")
+}
+
+model Apliccant {
+  id              String   @id @default(uuid())
+  name            String
+  phone           String   @unique
+  birthdate       String?
+  cpf             String   @unique
+  mother          String?
+  father          String?
+  attachment      String?
+  ticket          String?  @unique
+  zone            String?
+  section         String?
+  ticketOrigin    String?  @map("ticket_origin")
+  ticketSituation String?  @map("ticket_situation")
+  ticketEmission  String?  @map("ticket_emission")
+  observation     String?
+  avatarUrl       String?  @map("avatar_url")
+  travelStatus    String?  @map("travel_status")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  demands Demand[]
+
+  @@map("applicants")
 }
 
 enum DemandStatus {
@@ -179,11 +195,17 @@ model Demand {
   createdAt   DateTime       @default(now()) @map("created_at")
   updatedAt   DateTime       @updatedAt @map("updated_at")
 
-  owner  User   @relation(fields: [userId], references: [id])
-  userId String @map("user_id")
+  unit   Unit   @relation(fields: [unitId], references: [id])
+  unitId String @map("unit_id")
 
-  unit   Unit?   @relation(fields: [unitId], references: [id])
-  unitId String? @map("unit_id")
+  members  Member @relation(fields: [memberId], references: [id])
+  memberId String @map("member_id")
+
+  Apliccant   Apliccant @relation(fields: [apliccantId], references: [id])
+  apliccantId String    @map("apliccant_id")
+
+  owner   User   @relation(fields: [ownerId], references: [id])
+  ownerId String @map("owner_id")
 
   @@map("demands")
 }
@@ -199,6 +221,8 @@ model Billing {
 model Unit {
   id          String   @id @default(uuid())
   name        String
+  slug        String   @unique
+  domain      String?  @unique
   description String?
   location    String
   createdAt   DateTime @default(now()) @map("created_at")
@@ -207,6 +231,12 @@ model Unit {
   invites Invite[]
   members Member[]
   demands Demand[]
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String       @map("organization_id")
+
+  owner   User   @relation(fields: [ownerId], references: [id])
+  ownerId String @map("owner_id")
 
   @@map("units")
 }
