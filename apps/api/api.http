@@ -8,3 +8,14 @@ Content-Type: application/json
 }
 
 ###
+
+
+POST http://localhost:3333/sessions/password
+Content-Type: application/json
+ 
+{
+  "email": "hugo@acmeclerk.com",
+  "password": "romerito"
+}
+
+###
