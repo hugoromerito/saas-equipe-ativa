@@ -15,10 +15,17 @@ Content-Type: application/json
  
 {
   "email": "hugo@acmeclerk.com",
-  "password": "romerito"
+  "password": "romerito1"
 }
 
 ###
+
+GET http://localhost:3333/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMDBjMDRiNC01ODQ3LTRjZTctOWExNi0xZDI2NWYyMzhlN2MiLCJpYXQiOjE3NDE4MjU3ODQsImV4cCI6MTc0MjQzMDU4NH0.lR4viIi7PYb3OMoM1e1S9NPnsHHy7BiqKmGELF89FKM
+ 
+
+###
+
 
 GET http://localhost:3333/profile
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMDBjMDRiNC01ODQ3LTRjZTctOWExNi0xZDI2NWYyMzhlN2MiLCJpYXQiOjE3NDE4MjU3ODQsImV4cCI6MTc0MjQzMDU4NH0.lR4viIi7PYb3OMoM1e1S9NPnsHHy7BiqKmGELF89FKM
