@@ -21,6 +21,7 @@ import {
   getGoogleAuthUrl,
 } from './routes/auth/authenticate-with-google'
 import { env } from '@saas/env'
+import { createOrganization } from './routes/orgs/create-organization'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -72,6 +73,8 @@ app.register(getGoogleAuthUrl)
 app.register(getProfile)
 app.register(requestPasswordRecover)
 app.register(resetPassword)
+
+app.register(createOrganization)
 
 app.listen({ port: env.SERVER_PORT }).then(() => {
   console.log('HTTP server running!')
