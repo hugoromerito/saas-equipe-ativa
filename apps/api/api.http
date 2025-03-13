@@ -28,7 +28,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMDBjMDRiN
 
 
 GET http://localhost:3333/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkOTBmYjY5OC05NDkzLTQxOTUtOGYyYy00MWExODA1N2IwODYiLCJpYXQiOjE3NDE4OTU2NzcsImV4cCI6MTc0MjUwMDQ3N30.yVeC2wgSABa6HirmACD7Ij9GHNjCP_hbuVqd6pQr1BE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyODk0MmQyYi1iMmNhLTQyNzItODg5Ny1kMDgyZTBhYzJhYjAiLCJpYXQiOjE3NDE4OTcyMjIsImV4cCI6MTc0MjUwMjAyMn0.Wyaf61qMlh3uc2gA7AM_JyyBrTmkjp-Ckeu4OA8Qs20
  
 
 ### Teste de autenticação com Google OAuth
@@ -36,7 +36,7 @@ POST http://localhost:3333/sessions/google
 Content-Type: application/json
 
 {
-  "code": "4/0AQSTgQH_nPpMc2nJlzaBKGS89YyPvFOqKovMrDNAXYMoQh6SD_gNNdomGeQrzrkV_heX3Q"
+  "code": "4/0AQSTgQGPsgqDN05cvb5cgSYWTYUe9HMzPbkn0Ia_bJtJVZgYnQagboDoFzjNLJ72MRNyfQ"
 }
 
 ### Obter URL de autenticação do Google
