@@ -2,15 +2,15 @@ import { type FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { google } from 'googleapis'
+import { env } from '@saas/env'
 
 import { prisma } from '@/lib/prisma'
 import { BadRequestError } from '../_errors/bad-request-error'
 
 // Em produção, essas constantes devem ser armazenadas em variáveis de ambiente.
-const GOOGLE_CLIENT_ID =
-  '383673663455-1a0gaafn9i7pot65qe7buo7n86dvnfob.apps.googleusercontent.com'
-const GOOGLE_CLIENT_SECRET = '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'
-const GOOGLE_REDIRECT_URI = 'http://localhost:3000/api/auth/callback'
+const GOOGLE_CLIENT_ID = env.GOOGLE_OAUTH_CLIENT_ID
+const GOOGLE_CLIENT_SECRET = env.GOOGLE_OAUTH_CLIENT_SECRET
+const GOOGLE_REDIRECT_URI = env.GOOGLE_OAUTH_CLIENT_REDIRECT_URI
 
 /**
  * Rota para obter a URL de autenticação com o Google.
