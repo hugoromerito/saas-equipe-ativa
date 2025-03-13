@@ -3,7 +3,7 @@ Content-Type: application/json
  
 {
   "name": "Teste",
-  "email": "hugo@acmeclerk.com",
+  "email": "hugoxvida@gmail.com",
   "password": "romerito"
 }
 
@@ -28,7 +28,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMDBjMDRiN
 
 
 GET http://localhost:3333/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMDBjMDRiNC01ODQ3LTRjZTctOWExNi0xZDI2NWYyMzhlN2MiLCJpYXQiOjE3NDE4MjU3ODQsImV4cCI6MTc0MjQzMDU4NH0.lR4viIi7PYb3OMoM1e1S9NPnsHHy7BiqKmGELF89FKM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkOTBmYjY5OC05NDkzLTQxOTUtOGYyYy00MWExODA1N2IwODYiLCJpYXQiOjE3NDE4OTU2NzcsImV4cCI6MTc0MjUwMDQ3N30.yVeC2wgSABa6HirmACD7Ij9GHNjCP_hbuVqd6pQr1BE
  
 
-###
+### Teste de autenticação com Google OAuth
+POST http://localhost:3333/sessions/google
+Content-Type: application/json
+
+{
+  "code": "4/0AQSTgQH_nPpMc2nJlzaBKGS89YyPvFOqKovMrDNAXYMoQh6SD_gNNdomGeQrzrkV_heX3Q"
+}
+
+### Obter URL de autenticação do Google
+GET http://localhost:3333/auth/google/url
+
