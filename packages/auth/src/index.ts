@@ -16,6 +16,7 @@ import { userSubject } from './subjects/user'
 import { organizationSubject } from './subjects/organization'
 
 export * from './models/user'
+export * from './models/organization'
 export * from './models/demand'
 export * from './models/unit'
 export * from './roles'
@@ -49,6 +50,9 @@ export function defineAbilityFor(user: User) {
       return subject.__typename
     },
   })
+
+  ability.can = ability.can.bind(ability)
+  ability.cannot = ability.cannot.bind(ability)
 
   return ability
 }
