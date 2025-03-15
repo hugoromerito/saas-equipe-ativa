@@ -174,7 +174,7 @@ CREATE INDEX "invites_email_idx" ON "invites"("email");
 CREATE UNIQUE INDEX "invites_email_organization_id_unit_id_key" ON "invites"("email", "organization_id", "unit_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "members_user_id_organization_id_unit_id_key" ON "members"("user_id", "organization_id", "unit_id");
+CREATE UNIQUE INDEX "members_organization_id_user_id_key" ON "members"("organization_id", "user_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "organizations_slug_key" ON "organizations"("slug");
