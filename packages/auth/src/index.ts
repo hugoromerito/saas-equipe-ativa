@@ -14,6 +14,7 @@ import { inviteSubject } from './subjects/invite'
 import { unitSubject } from './subjects/unit'
 import { userSubject } from './subjects/user'
 import { organizationSubject } from './subjects/organization'
+import { applicantSubject } from './subjects/applicant'
 
 export * from './models/user'
 export * from './models/organization'
@@ -24,6 +25,7 @@ export * from './roles'
 const appAbilities = z.union([
   userSubject,
   unitSubject,
+  applicantSubject,
   demandSubject,
   inviteSubject,
   billingSubject,

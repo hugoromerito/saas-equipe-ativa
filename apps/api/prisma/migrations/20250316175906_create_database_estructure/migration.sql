@@ -55,7 +55,7 @@ CREATE TABLE "invites" (
     "email" TEXT NOT NULL,
     "role" "Role" NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "user_id" TEXT,
+    "author_id" TEXT,
     "organization_id" TEXT NOT NULL,
     "unit_id" TEXT NOT NULL,
 
@@ -93,12 +93,12 @@ CREATE TABLE "applicants" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
-    "birthdate" TEXT,
+    "birthdate" TEXT NOT NULL,
     "cpf" TEXT NOT NULL,
+    "ticket" TEXT,
     "mother" TEXT,
     "father" TEXT,
     "attachment" TEXT,
-    "ticket" TEXT,
     "zone" TEXT,
     "section" TEXT,
     "ticket_origin" TEXT,
@@ -109,6 +109,7 @@ CREATE TABLE "applicants" (
     "travel_status" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
+    "organizationId" TEXT NOT NULL,
 
     CONSTRAINT "applicants_pkey" PRIMARY KEY ("id")
 );
@@ -121,14 +122,20 @@ CREATE TABLE "demands" (
     "status" "DemandStatus" NOT NULL,
     "priority" "DemandPriority" NOT NULL,
     "category" "DemandCategory" NOT NULL,
-    "location" TEXT,
+    "street" TEXT,
+    "complement" TEXT,
+    "number" TEXT,
+    "neighborhood" TEXT,
+    "cep" TEXT,
     "attachment" TEXT,
+    "created_by_member" TEXT NOT NULL,
+    "updated_by_member" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "unit_id" TEXT NOT NULL,
-    "member_id" TEXT NOT NULL,
-    "apliccant_id" TEXT NOT NULL,
-    "owner_id" TEXT NOT NULL,
+    "applicant_id" TEXT NOT NULL,
+    "owner_id" TEXT,
+    "memberId" TEXT,
 
     CONSTRAINT "demands_pkey" PRIMARY KEY ("id")
 );
@@ -174,16 +181,13 @@ CREATE INDEX "invites_email_idx" ON "invites"("email");
 CREATE UNIQUE INDEX "invites_email_organization_id_unit_id_key" ON "invites"("email", "organization_id", "unit_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "members_organization_id_user_id_key" ON "members"("organization_id", "user_id");
+CREATE UNIQUE INDEX "members_user_id_organization_id_unit_id_key" ON "members"("user_id", "organization_id", "unit_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "organizations_slug_key" ON "organizations"("slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "organizations_domain_key" ON "organizations"("domain");
-
--- CreateIndex
-CREATE UNIQUE INDEX "applicants_phone_key" ON "applicants"("phone");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "applicants_cpf_key" ON "applicants"("cpf");
@@ -204,7 +208,7 @@ ALTER TABLE "tokens" ADD CONSTRAINT "tokens_user_id_fkey" FOREIGN KEY ("user_id"
 ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "invites" ADD CONSTRAINT "invites_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "invites" ADD CONSTRAINT "invites_author_id_fkey" FOREIGN KEY ("author_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "invites" ADD CONSTRAINT "invites_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -225,16 +229,19 @@ ALTER TABLE "members" ADD CONSTRAINT "members_unit_id_fkey" FOREIGN KEY ("unit_i
 ALTER TABLE "organizations" ADD CONSTRAINT "organizations_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "applicants" ADD CONSTRAINT "applicants_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "demands" ADD CONSTRAINT "demands_unit_id_fkey" FOREIGN KEY ("unit_id") REFERENCES "units"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "demands" ADD CONSTRAINT "demands_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "demands" ADD CONSTRAINT "demands_applicant_id_fkey" FOREIGN KEY ("applicant_id") REFERENCES "applicants"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "demands" ADD CONSTRAINT "demands_apliccant_id_fkey" FOREIGN KEY ("apliccant_id") REFERENCES "applicants"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "demands" ADD CONSTRAINT "demands_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "demands" ADD CONSTRAINT "demands_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "demands" ADD CONSTRAINT "demands_memberId_fkey" FOREIGN KEY ("memberId") REFERENCES "members"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "units" ADD CONSTRAINT "units_organization_id_fkey" FOREIGN KEY ("organization_id") REFERENCES "organizations"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -5,7 +5,7 @@ import { hash } from 'bcryptjs'
 const prisma = new PrismaClient()
 
 async function seed() {
-  // Limpeza dos dados existentes
+  // Limpeza dos dados existentes (começando pelos registros que não possuem dependências)
   await prisma.organization.deleteMany()
   await prisma.user.deleteMany()
 
@@ -251,20 +251,20 @@ async function seed() {
     },
   })
 
-  // Criação dos Apliccant e das demandas para cada unidade
+  // Criação dos applicants e das demandas para cada unidade
   const units = await prisma.unit.findMany()
   for (const unit of units) {
-    // Cria um Apliccant para a unidade
-    const apliccant = await prisma.apliccant.create({
+    // Cria um applicant para a unidade e associa à organização da unidade
+    const applicant = await prisma.applicant.create({
       data: {
         name: faker.person.fullName(),
         phone: faker.phone.number(),
         birthdate: faker.date.birthdate().toISOString(),
         cpf: faker.string.numeric(11),
+        ticket: faker.string.numeric(12),
         mother: faker.person.fullName(),
         father: faker.person.fullName(),
         attachment: faker.internet.url(),
-        ticket: faker.string.numeric(12),
         zone: faker.location.city(),
         section: faker.location.street(),
         ticketOrigin: faker.lorem.word(),
@@ -273,9 +273,11 @@ async function seed() {
         observation: faker.lorem.sentence(),
         avatarUrl: faker.image.avatar(),
         travelStatus: faker.lorem.word(),
+        organization: { connect: { id: unit.organizationId } },
       },
     })
 
+    // Cria um membro para associar à demanda
     const memberForDemand = await prisma.member.create({
       data: {
         role: faker.helpers.arrayElement([
@@ -307,10 +309,18 @@ async function seed() {
         status: 'PENDING',
         priority: 'MEDIUM',
         category: 'HEALTH',
-        location: faker.location.streetAddress(),
+        // Utilizando o campo "street" no lugar de "location"
+        street: faker.location.streetAddress(),
+        // Os demais campos opcionais podem ser omitidos ou definidos conforme necessário:
+        complement: null,
+        number: null,
+        neighborhood: null,
+        cep: null,
+        attachment: null,
+        createdByMemberName: user.name!,
         unit: { connect: { id: unit.id } },
-        members: { connect: { id: memberForDemand.id } },
-        Apliccant: { connect: { id: apliccant.id } },
+        member: { connect: { id: memberForDemand.id } },
+        applicant: { connect: { id: applicant.id } },
         owner: { connect: { id: user.id } },
       },
     })

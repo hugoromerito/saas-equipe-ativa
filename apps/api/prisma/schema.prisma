@@ -75,8 +75,8 @@ model Invite {
   createdAt DateTime @default(now()) @map("created_at")
 
   // A quem pertence o convite
-  author User?   @relation(fields: [userId], references: [id])
-  userId String? @map("user_id")
+  author   User?   @relation(fields: [authorId], references: [id])
+  authorId String? @map("author_id")
 
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId String       @map("organization_id")
@@ -122,23 +122,24 @@ model Organization {
   owner   User   @relation(fields: [ownerId], references: [id])
   ownerId String @map("owner_id")
 
-  invites Invite[]
-  members Member[]
-  units   Unit[]
+  invites    Invite[]
+  members    Member[]
+  units      Unit[]
+  applicants Applicant[]
 
   @@map("organizations")
 }
 
-model Apliccant {
+model Applicant {
   id              String   @id @default(uuid())
   name            String
-  phone           String   @unique
-  birthdate       String?
+  phone           String
+  birthdate       String
   cpf             String   @unique
+  ticket          String?  @unique
   mother          String?
   father          String?
   attachment      String? // Frente e verso
-  ticket          String?  @unique
   zone            String?
   section         String?
   ticketOrigin    String?  @map("ticket_origin")
@@ -149,6 +150,9 @@ model Apliccant {
   travelStatus    String?  @map("travel_status")
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
 
   demands Demand[]
 
@@ -184,28 +188,33 @@ enum DemandCategory {
 }
 
 model Demand {
-  id          String         @id @default(uuid())
-  title       String
-  description String
-  status      DemandStatus
-  priority    DemandPriority
-  category    DemandCategory
-  location    String?
-  attachment  String? //  Antes e depois
-  createdAt   DateTime       @default(now()) @map("created_at")
-  updatedAt   DateTime       @updatedAt @map("updated_at")
+  id                  String         @id @default(uuid())
+  title               String
+  description         String
+  status              DemandStatus
+  priority            DemandPriority
+  category            DemandCategory
+  street              String?
+  complement          String?
+  number              String?
+  neighborhood        String?
+  cep                 String?
+  attachment          String? //  Antes e depois
+  createdByMemberName String         @map("created_by_member")
+  updatedByMemberName String?        @map("updated_by_member")
+  createdAt           DateTime       @default(now()) @map("created_at")
+  updatedAt           DateTime       @updatedAt @map("updated_at")
 
-  unit   Unit   @relation(fields: [unitId], references: [id])
-  unitId String @map("unit_id")
+  unit        Unit      @relation(fields: [unitId], references: [id], onDelete: Restrict)
+  unitId      String    @map("unit_id")
+  applicant   Applicant @relation(fields: [applicantId], references: [id], onDelete: Restrict)
+  applicantId String    @map("applicant_id")
 
-  members  Member @relation(fields: [memberId], references: [id])
-  memberId String @map("member_id")
+  owner   User?   @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId String? @map("owner_id")
 
-  Apliccant   Apliccant @relation(fields: [apliccantId], references: [id])
-  apliccantId String    @map("apliccant_id")
-
-  owner   User   @relation(fields: [ownerId], references: [id])
-  ownerId String @map("owner_id")
+  member   Member? @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  memberId String?
 
   @@map("demands")
 }

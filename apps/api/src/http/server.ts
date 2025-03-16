@@ -28,6 +28,14 @@ import { getOrganizations } from './routes/orgs/get-organizations'
 import { updateOrganization } from './routes/orgs/update-organization'
 import { shutdownOrganization } from './routes/orgs/shutdown-organization'
 import { transferOrganization } from './routes/orgs/transfer-organization'
+import { createUnit } from './routes/units/create_unit'
+import { createInvite } from './routes/invites/create-invite'
+import { acceptInvite } from './routes/invites/accept-invite'
+import { getUnits } from './routes/units/get-units'
+import { createApplicant } from './routes/applicants/create-applicant'
+import { createDemand } from './routes/demands/create-demand'
+import { getDemands } from './routes/demands/get-demand'
+import { updateDemand } from './routes/demands/update-demand'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -87,6 +95,18 @@ app.register(updateOrganization)
 app.register(shutdownOrganization)
 app.register(transferOrganization)
 app.register(getMembership)
+
+app.register(createUnit)
+app.register(getUnits)
+
+app.register(createInvite)
+app.register(acceptInvite)
+
+app.register(createApplicant)
+
+app.register(createDemand)
+app.register(getDemands)
+app.register(updateDemand)
 
 app.listen({ port: env.SERVER_PORT }).then(() => {
   console.log('HTTP server running!')

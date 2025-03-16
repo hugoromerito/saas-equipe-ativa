@@ -18,13 +18,15 @@ export const permissions: Record<Role, PermissionsByRole> = {
       ownerId: { $eq: user.id },
     })
   },
-  MANAGER: (user, { can, cannot }) => {
+  MANAGER: (_, { can, cannot }) => {
+    can('create', 'Applicant') // Pode criar demandas
     can('create', 'Demand') // Pode criar demandas
-    can('get', 'Demand', { ownerId: { $eq: user.id } }) // Pode listar demandas próprias
+    can('get', 'Demand') // Pode listar demandas da unidade a qual pertence
     can('manage', 'User') // Pode gerenciar usuários
     cannot('delete', 'User') // Não pode deletar um usuário
   },
   CLERK: (user, { can }) => {
+    can('create', 'Applicant') // Pode criar applicant
     can('create', 'Demand') // Pode criar demandas
     can('get', 'Demand', { ownerId: { $eq: user.id } }) // Pode listar demandas próprias
     can(['assign', 'create'], 'User') // Pode atribuir demandas e criar usuários
@@ -32,9 +34,9 @@ export const permissions: Record<Role, PermissionsByRole> = {
   ANALYST: (_, { can }) => {
     can(['get', 'update'], 'Demand') // Pode listar e atualizar demandas
   },
-  APPLICANT: (user, { can }) => {
-    can('get', 'Demand', { ownerId: { $eq: user.id } }) // Pode listar demandas
-  },
+  // APPLICANT: (user, { can }) => {
+  //   can('get', 'Demand', { ownerId: { $eq: user.id } }) // Pode listar demandas
+  // },
   BILLING: (_, { can }) => {
     can('manage', 'Billing')
   },

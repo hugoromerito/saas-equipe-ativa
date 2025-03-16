@@ -5,7 +5,7 @@ export const roleSchema = z.union([
   z.literal('MANAGER'),
   z.literal('CLERK'),
   z.literal('ANALYST'),
-  z.literal('APPLICANT'),
+  // z.literal('APPLICANT'),
   z.literal('BILLING'),
 ])
 
