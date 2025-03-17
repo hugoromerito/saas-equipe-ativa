@@ -10,18 +10,18 @@ import { AlertTriangle, Loader2 } from 'lucide-react'
 import googleIcon from '@/assets/google-icon.svg'
 import eaLogo from '@/assets/ea-logo.svg'
 import Image from 'next/image'
-import { signInWithEmailAndPassword } from './actions'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { useFormState } from '@/hooks/use-form-state'
 import { useRouter } from 'next/navigation'
 import { signInWithGoogle } from '../actions'
+import { signUpAction } from './actions'
 
-export default function SignInForm() {
+export default function SignUpForm() {
   const router = useRouter()
   const [{ success, message, errors }, handleSubmit, isPending] = useFormState(
-    signInWithEmailAndPassword,
+    signUpAction,
     () => {
-      router.push('/')
+      router.push('/auth/sign-in')
     },
   )
 
@@ -39,6 +39,16 @@ export default function SignInForm() {
           </Alert>
         )}
 
+        <div className="space-y-1">
+          <Label htmlFor="name">Nome</Label>
+          <Input name="name" type="text" id="name" />
+
+          {errors?.name && (
+            <p className="text-sm font-medium text-red-500 dark:text-red-400">
+              {errors.name[0]}
+            </p>
+          )}
+        </div>
         <div className="space-y-1">
           <Label htmlFor="email">E-mail</Label>
           <Input name="email" type="email" id="email" />
@@ -58,31 +68,40 @@ export default function SignInForm() {
               {errors.password[0]}
             </p>
           )}
+        </div>
+        <div className="space-y-1">
+          <Label htmlFor="password_confirmation">Confirme sua senha</Label>
+          <Input
+            name="password_confirmation"
+            type="password"
+            id="password_confirmation"
+          />
 
-          <Link
-            href="/auth/forgot-password"
-            className="text-foreground text-xs font-medium hover:underline"
-          >
-            Esqueceu sua senha?
-          </Link>
+          {errors?.password_confirmation && (
+            <p className="text-sm font-medium text-red-500 dark:text-red-400">
+              {errors.password_confirmation[0]}
+            </p>
+          )}
         </div>
 
         <Button type="submit" className="w-full" disabled={isPending}>
           {isPending ? (
             <Loader2 className="size-4 animate-spin" />
           ) : (
-            'Entrar com e-mail'
+            'Criar conta'
           )}
         </Button>
         <Button variant="link" className="w-full" size="sm" asChild>
-          <Link href="/auth/sign-up">Criar nova conta</Link>
+          <Link href="/auth/sign-in">Já possui conta? Entrar</Link>
         </Button>
       </form>
+
       <Separator />
+
       <form action={signInWithGoogle}>
         <Button type="submit" className="w-full" variant="outline">
           <Image src={googleIcon} className="mr-2 size-4" alt="" />
-          Entrar com Google
+          Cadastrar com Google
         </Button>
       </form>
     </div>
