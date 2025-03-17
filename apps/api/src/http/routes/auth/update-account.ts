@@ -28,7 +28,7 @@ export async function updateAccount(app: FastifyInstance) {
       },
     },
     () => {
-      return 'User created!'
+      return 'Usuário atualizado!'
     },
   )
 }

@@ -48,7 +48,7 @@ export async function getProfile(app: FastifyInstance) {
         })
 
         if (!user) {
-          throw new Error('User not found')
+          throw new Error('Usuário não encontrado.')
         }
 
         return reply.send({ user })

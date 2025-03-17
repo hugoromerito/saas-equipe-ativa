@@ -30,7 +30,7 @@ export async function createAccount(app: FastifyInstance) {
       })
 
       if (userWithSameEmail) {
-        throw new BadRequestError('user with same e-mail already exists.')
+        throw new BadRequestError('Já existe um usuário com o mesmo e-mail.')
       }
 
       const [, domain] = email.split('@')
@@ -59,7 +59,7 @@ export async function createAccount(app: FastifyInstance) {
         },
       })
 
-      return reply.status(201).send({ message: 'User created' })
+      return reply.status(201).send({ message: 'Conta criada' })
     },
   )
 }
