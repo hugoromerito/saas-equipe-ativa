@@ -3,6 +3,7 @@ import eaLogo from '@/assets/ea-logo.svg'
 import { ProfileButton } from './profile-button'
 import { Slash } from 'lucide-react'
 import { OrganizationSwitcher } from './organization-switcher'
+import { UnitSwitcher } from './unit-switcher'
 
 export function Header() {
   return (
@@ -13,6 +14,8 @@ export function Header() {
         <Slash className="text-border size-3 -rotate-[24deg]" />
 
         <OrganizationSwitcher />
+        {/* <Slash className="text-border size-3 -rotate-[24deg]" />
+        <UnitSwitcher /> */}
       </div>
 
       <div className="flex items-center gap-4">
