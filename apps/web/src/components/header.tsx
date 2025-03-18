@@ -14,8 +14,8 @@ export function Header() {
         <Slash className="text-border size-3 -rotate-[24deg]" />
 
         <OrganizationSwitcher />
-        {/* <Slash className="text-border size-3 -rotate-[24deg]" />
-        <UnitSwitcher /> */}
+        <Slash className="text-border size-3 -rotate-[24deg]" />
+        <UnitSwitcher />
       </div>
 
       <div className="flex items-center gap-4">
