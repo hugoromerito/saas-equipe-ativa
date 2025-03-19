@@ -1,18 +1,18 @@
 import { api } from './api-client'
 
-interface signUpRequest {
+interface SignUpRequest {
   name: string
   email: string
   password: string
 }
 
-type signUpResponse = void
+type SignUpResponse = void
 
 export async function signUp({
   name,
   email,
   password,
-}: signUpRequest): Promise<signUpResponse> {
+}: SignUpRequest): Promise<SignUpResponse> {
   const result = await api.post('users', {
     json: {
       name,

@@ -39,6 +39,30 @@ Content-Type: application/json
   "code": "4/0AQSTgQGPsgqDN05cvb5cgSYWTYUe9HMzPbkn0Ia_bJtJVZgYnQagboDoFzjNLJ72MRNyfQ"
 }
 
+
+### Teste de autenticação com Google OAuth
+POST http://localhost:3333/organizations/equipe-ea/units/usf/invites
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NjA0ODIxZS0yNDk5LTQyYWYtYmY2ZS02NzVhMjMyZGY2NWUiLCJpYXQiOjE3NDIzMjEwMTEsImV4cCI6MTc0MjkyNTgxMX0.2Hj9kk9E_gDlBeQxFo8xpAF-1ORaTLTEoQ11lx2kjx4
+
+{
+  "email": "stuart@gmail.com",
+  "role": "CLERK"
+}
+
 ### Obter URL de autenticação do Google
 GET http://localhost:3333/auth/google/url
 
+###
+
+
+GET http://localhost:3333/organizations/equipe-ea/units
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NjA0ODIxZS0yNDk5LTQyYWYtYmY2ZS02NzVhMjMyZGY2NWUiLCJpYXQiOjE3NDIzMjEwMTEsImV4cCI6MTc0MjkyNTgxMX0.2Hj9kk9E_gDlBeQxFo8xpAF-1ORaTLTEoQ11lx2kjx4
+
+
+
+###
+
+
+POST http://localhost:3333/invites/0cd009a4-de85-40e0-8391-4906ac5e77db/accept
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjYjljYjU3MC0zOTkyLTQ4NGUtOTE1ZC02MmIyZjllMDBiYmQiLCJpYXQiOjE3NDIzNTQ0NDQsImV4cCI6MTc0Mjk1OTI0NH0.QFiQECWMDKuWAOxGqDUBqMB7445vxvUswNr8DoNysTI

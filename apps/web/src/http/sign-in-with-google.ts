@@ -1,21 +1,21 @@
 import { api } from './api-client'
 
-interface signInWithGoogle {
+interface SignInWithGoogle {
   code: string
 }
 
-interface signInWithGoogleResponse {
+interface SignInWithGoogleResponse {
   token: string
 }
 
-export async function signInWithGoogle({ code }: signInWithGoogle) {
+export async function signInWithGoogle({ code }: SignInWithGoogle) {
   const result = await api
     .post('sessions/google', {
       json: {
         code,
       },
     })
-    .json<signInWithGoogleResponse>()
+    .json<SignInWithGoogleResponse>()
 
   return result
 }

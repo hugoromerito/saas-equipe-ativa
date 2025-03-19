@@ -10,12 +10,15 @@ export async function getUnits(app: FastifyInstance) {
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
     .get(
-      '/units',
+      '/organizations/:organizationsSlug/units',
       {
         schema: {
           tags: ['units'],
-          summary: 'Get unit where user is a member',
+          summary: 'Get units where user is owner or member',
           security: [{ bearerAuth: [] }],
+          params: z.object({
+            organizationsSlug: z.string(),
+          }),
           response: {
             200: z.object({
               units: z.array(
@@ -25,7 +28,8 @@ export async function getUnits(app: FastifyInstance) {
                   slug: z.string(),
                   description: z.string().nullable(),
                   location: z.string(),
-                  role: roleSchema,
+                  // role: roleSchema,
+                  isOwner: z.boolean(), // 👈 flag extra
                 }),
               ),
             }),
@@ -34,36 +38,43 @@ export async function getUnits(app: FastifyInstance) {
       },
       async (request) => {
         const userId = await request.getCurrentUserId()
+        const { organizationsSlug } = request.params
 
+        const organization = await prisma.organization.findUnique({
+          where: { slug: organizationsSlug },
+          select: { id: true },
+        })
+
+        if (!organization) return { units: [] }
+
+        // Buscar unidades que o usuário é dono OU membro
         const units = await prisma.unit.findMany({
+          where: {
+            organizationId: organization.id,
+            OR: [{ ownerId: userId }, { members: { some: { userId } } }],
+          },
           select: {
             id: true,
             name: true,
             slug: true,
             description: true,
             location: true,
+            ownerId: true,
             members: {
-              select: {
-                role: true,
-              },
-              where: {
-                userId,
-              },
-            },
-          },
-          where: {
-            members: {
-              some: {
-                userId,
-              },
+              where: { userId },
+              select: { role: true },
             },
           },
         })
 
-        const unitsWithUserRole = units.map(({ members, ...unit }) => {
+        const unitsWithUserRole = units.map(({ ownerId, members, ...unit }) => {
+          const isOwner = ownerId === userId
+          // const role = members[0]?.role
+
           return {
             ...unit,
-            role: members[0].role,
+            // role,
+            isOwner,
           }
         })
 

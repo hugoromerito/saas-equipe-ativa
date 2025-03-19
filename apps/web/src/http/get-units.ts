@@ -1,6 +1,6 @@
 import { api } from './api-client'
 
-interface getUnitsResponse {
+interface GetUnitsResponse {
   units: {
     id: string
     name: string
@@ -10,8 +10,10 @@ interface getUnitsResponse {
   }[]
 }
 
-export async function getUnits() {
-  const result = await api.get('units').json<getUnitsResponse>()
+export async function getUnits(org: string) {
+  const result = await api
+    .get(`organizations/${org}/units`)
+    .json<GetUnitsResponse>()
 
   return result
 }

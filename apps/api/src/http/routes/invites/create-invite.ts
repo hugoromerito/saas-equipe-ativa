@@ -90,7 +90,7 @@ export async function createInvite(app: FastifyInstance) {
 
         if (inviteWithSameEmail) {
           throw new BadRequestError(
-            'Another invite with same e-mail already exists.',
+            'Já existe outro convite com o mesmo e-mail.',
           )
         }
 
@@ -107,8 +107,36 @@ export async function createInvite(app: FastifyInstance) {
 
         if (memberWithSameEmail) {
           throw new BadRequestError(
-            'A member with this e-mail already belongs to your organization.',
+            'Um membro com este e-mail já pertence à sua organização.',
           )
+        }
+
+        const memberWithSameEmailOrgWide = await prisma.member.findFirst({
+          where: {
+            organizationId: organization.id,
+            user: {
+              email,
+            },
+          },
+        })
+
+        if (memberWithSameEmailOrgWide) {
+          if (memberWithSameEmailOrgWide.role !== role) {
+            throw new BadRequestError(
+              `Este e-mail já pertence a um membro da organização com o cargo "${memberWithSameEmailOrgWide.role}". Você não pode convidar com um cargo diferente.`,
+            )
+          }
+
+          // Verifica se esse membro já pertence à mesma unidade
+          if (memberWithSameEmailOrgWide.unitId === unit.id) {
+            throw new BadRequestError(
+              'Um membro com este e-mail já pertence a esta unidade da organização.',
+            )
+          }
+
+          // Se é o mesmo membro na org mas não na unidade, você pode optar por permitir o convite para outra unidade, se desejar.
+          // Caso NÃO queira permitir, lance erro aqui também.
+          // throw new BadRequestError('Este membro já pertence à organização e não pode ser convidado para outra unidade.')
         }
 
         const invite = await prisma.invite.create({
