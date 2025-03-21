@@ -64,5 +64,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NjA0ODIxZ
 ###
 
 
-POST http://localhost:3333/invites/0cd009a4-de85-40e0-8391-4906ac5e77db/accept
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjYjljYjU3MC0zOTkyLTQ4NGUtOTE1ZC02MmIyZjllMDBiYmQiLCJpYXQiOjE3NDIzNTQ0NDQsImV4cCI6MTc0Mjk1OTI0NH0.QFiQECWMDKuWAOxGqDUBqMB7445vxvUswNr8DoNysTI
+GET http://localhost:3333/organizations/usf/membership
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3MDMzN2U4MC0yZjhjLTQzNzItYjQyZC1kOTI5MGVkNDkwNTQiLCJpYXQiOjE3NDIzOTQyNzYsImV4cCI6MTc0Mjk5OTA3Nn0.1JEqjLsU4h9NwhH1eeQPaTwVY74o5UvXd-hXe9ANH3c
+'
+
+
+###
+
+
+POST http://localhost:3333/invites/cb1dc80b-e4af-48f7-9e77-0f98cbd5bbc3/accept
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTk1YzYxMC1lYTJiLTRhZTMtYmE4NS1mMjI2OGI2ZWZmOTAiLCJpYXQiOjE3NDIzOTQ4NTUsImV4cCI6MTc0Mjk5OTY1NX0.X2RliSz5NFb4s52Tj0Zg-lEgvlFgc-MoMq13UFOf1-A

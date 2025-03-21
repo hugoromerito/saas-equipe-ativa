@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { AlertTriangle, Loader2 } from 'lucide-react'
 
 import googleIcon from '@/assets/google-icon.svg'
-import eaLogo from '@/assets/ea-logo.svg'
+import eaLogo from '@/assets/eabeta-logo.svg'
 import Image from 'next/image'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { useFormState } from '@/hooks/use-form-state'

@@ -49,7 +49,7 @@ export async function UnitSwitcher() {
                   key={units.id}
                   asChild
                 >
-                  <Link href={`org//unit/${units.slug}`}>
+                  <Link href={`${currentOrg}/unit/${units.slug}`}>
                     <span className="line-clamp-1">{units.name}</span>
                   </Link>
                 </DropdownMenuItem>
