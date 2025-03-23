@@ -1,23 +1,24 @@
 import { useState, useTransition, type FormEvent } from 'react'
 
-interface FormState {
+interface BaseFormState {
   success: boolean
   message: string | null
   errors: Record<string, string[]> | null
 }
 
-export function useFormState(
-  action: (data: FormData) => Promise<FormState>,
-  onSuccess: () => Promise<void> | void,
-  initialState?: FormState,
+export function useFormState<T extends BaseFormState = BaseFormState>(
+  action: (data: FormData) => Promise<T>,
+  onSuccess: (state: T) => Promise<void> | void,
+  initialState?: T,
 ) {
   const [isPending, startTransition] = useTransition()
-  const [formState, setFormState] = useState(
-    initialState ?? {
-      success: false,
-      message: null,
-      errors: null,
-    },
+  const [formState, setFormState] = useState<T>(
+    initialState ??
+      ({
+        success: false,
+        message: null,
+        errors: null,
+      } as T),
   )
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -30,7 +31,7 @@ export function useFormState(
       const state = await action(data)
 
       if (state.success === true && onSuccess) {
-        await onSuccess()
+        await onSuccess(state)
       }
 
       setFormState(state)

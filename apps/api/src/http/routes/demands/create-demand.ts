@@ -4,7 +4,7 @@ import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { BadRequestError } from '../_errors/bad-request-error'
-import { DemandCategory, DemandPriority, DemandStatus } from '@prisma/client'
+import { DemandCategory, DemandPriority } from '@prisma/client'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 import { UnauthorizedError } from '../_errors/unauthorized-error'
 
@@ -22,7 +22,6 @@ export async function createDemand(app: FastifyInstance) {
           body: z.object({
             title: z.string(),
             description: z.string(),
-            status: z.nativeEnum(DemandStatus),
             priority: z.nativeEnum(DemandPriority),
             category: z.nativeEnum(DemandCategory),
             street: z.string().nullable(),
@@ -101,7 +100,6 @@ export async function createDemand(app: FastifyInstance) {
         const {
           title,
           description,
-          status,
           priority,
           category,
           street,
@@ -115,7 +113,6 @@ export async function createDemand(app: FastifyInstance) {
           data: {
             title,
             description,
-            status,
             priority,
             category,
             street,

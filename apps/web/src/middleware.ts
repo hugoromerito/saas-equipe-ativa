@@ -21,6 +21,14 @@ export function middleware(request: NextRequest) {
     response.cookies.delete('unit')
   }
 
+  if (pathname.startsWith('/org')) {
+    const [, , , , , , applicantSlug] = pathname.split('/')
+
+    response.cookies.set('applicant', applicantSlug)
+  } else {
+    response.cookies.delete('applicant')
+  }
+
   return response
 }
 

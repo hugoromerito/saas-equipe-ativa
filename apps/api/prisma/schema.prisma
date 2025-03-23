@@ -191,7 +191,7 @@ model Demand {
   id                  String         @id @default(uuid())
   title               String
   description         String
-  status              DemandStatus
+  status              DemandStatus   @default(PENDING)
   priority            DemandPriority
   category            DemandCategory
   street              String?

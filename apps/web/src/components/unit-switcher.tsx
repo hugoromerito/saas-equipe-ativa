@@ -10,14 +10,14 @@ import {
 } from './ui/dropdown-menu'
 import Link from 'next/link'
 import { cookies } from 'next/headers'
-import { ability, getCurrentOrg, getCurrentUnit } from '@/auth/auth'
+import { ability, getCurrentOrg, getCurrentUnits } from '@/auth/auth'
 
 export async function UnitSwitcher() {
   const currentOrg = await getCurrentOrg()
   // const currentOrg = (await cookies()).get('org')?.value
   const currentUni = (await cookies()).get('unit')?.value
 
-  const units = await getCurrentUnit()
+  const units = await getCurrentUnits()
 
   const currentUnit = units?.find((uni) => uni.slug === currentUni)
 
@@ -50,7 +50,7 @@ export async function UnitSwitcher() {
                   key={units.id}
                   asChild
                 >
-                  <Link href={`${currentOrg}/unit/${units.slug}`}>
+                  <Link href={`/org/${currentOrg}/unit/${units.slug}`}>
                     <span className="line-clamp-1">{units.name}</span>
                   </Link>
                 </DropdownMenuItem>
@@ -62,7 +62,7 @@ export async function UnitSwitcher() {
               <DropdownMenuSeparator />
 
               <DropdownMenuItem asChild className="cursor-pointer">
-                <Link href={`${currentOrg}/create-unit`}>
+                <Link href={`/org/${currentOrg}/create-unit`}>
                   <PlusCircle className="mr-2 size-4" />
                   Criar unidade
                 </Link>

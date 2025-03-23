@@ -21,6 +21,9 @@ export * from './models/organization'
 export * from './models/demand'
 export * from './models/unit'
 export * from './roles'
+export * from './demand-category'
+export * from './demand-priority'
+export * from './demand-status'
 
 const appAbilities = z.union([
   userSubject,

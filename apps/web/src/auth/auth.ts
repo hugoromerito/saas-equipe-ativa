@@ -1,3 +1,4 @@
+import { getApplicant } from '@/http/get-applicant'
 import { getMembership } from '@/http/get-membership'
 import { getProfile } from '@/http/get-profile'
 import { getUnits } from '@/http/get-units'
@@ -13,7 +14,11 @@ export async function getCurrentOrg() {
   return (await cookies()).get('org')?.value ?? null
 }
 
-export async function getCurrentUnit() {
+export async function getCurrentApplicantId() {
+  return (await cookies()).get('applicant')?.value ?? null
+}
+
+export async function getCurrentUnits() {
   const org = await getCurrentOrg()
 
   if (!org) {
@@ -23,6 +28,23 @@ export async function getCurrentUnit() {
   const { units } = await getUnits(org)
 
   return units
+}
+
+export async function getCurrentApplicant() {
+  const organizationSlug = await getCurrentOrg()
+  const applicantSlug = await getCurrentApplicantId()
+
+  if (!organizationSlug || !applicantSlug) {
+    return null
+  }
+
+  const applicant = await getApplicant({ organizationSlug, applicantSlug })
+
+  return applicant
+}
+
+export async function getCurrentUnit() {
+  return (await cookies()).get('unit')?.value ?? null
 }
 
 export async function getCurrentMembership() {
