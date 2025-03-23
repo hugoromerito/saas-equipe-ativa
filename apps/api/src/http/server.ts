@@ -36,6 +36,8 @@ import { createApplicant } from './routes/applicants/create-applicant'
 import { createDemand } from './routes/demands/create-demand'
 import { getDemands } from './routes/demands/get-demand'
 import { updateDemand } from './routes/demands/update-demand'
+import { getCheckApplicant } from './routes/applicants/get-check-applicant'
+import { getApplicant } from './routes/applicants/get-applicant'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -103,6 +105,8 @@ app.register(createInvite)
 app.register(acceptInvite)
 
 app.register(createApplicant)
+app.register(getApplicant)
+app.register(getCheckApplicant)
 
 app.register(createDemand)
 app.register(getDemands)

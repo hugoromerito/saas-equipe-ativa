@@ -6,7 +6,6 @@ import z from 'zod'
 import { BadRequestError } from '../_errors/bad-request-error'
 import { UnauthorizedError } from '../_errors/unauthorized-error'
 import { getUserPermissions } from '@/utils/get-user-permissions'
-import { checkerCpf } from '@/utils/checker-cpf'
 import { isCPF, isTituloEleitor } from 'validation-br'
 
 export async function createApplicant(app: FastifyInstance) {
@@ -18,7 +17,7 @@ export async function createApplicant(app: FastifyInstance) {
       {
         schema: {
           tags: ['applicants'],
-          summary: 'Cria uma nova demanda para uma unidade',
+          summary: 'Cadastra um novo solicitante na organização',
           security: [{ bearerAuth: [] }],
           body: z.object({
             name: z.string(),
@@ -65,12 +64,12 @@ export async function createApplicant(app: FastifyInstance) {
 
         if (cannot('create', 'Applicant')) {
           throw new UnauthorizedError(
-            `You're not allowed to create new  applicant.`,
+            'Você não tem permissão para criar um novo solicitante.',
           )
         }
 
         if (!organization) {
-          throw new BadRequestError('Organização não encontrada')
+          throw new BadRequestError('Organização não encontrada.')
         }
 
         // Verifica se já existe um applicant com o mesmo CPF
@@ -79,16 +78,16 @@ export async function createApplicant(app: FastifyInstance) {
         })
 
         if (!isCPF(cpf)) {
-          throw new BadRequestError('CPF inválido')
+          throw new BadRequestError('CPF inválido.')
         }
         if (existingCpf) {
-          throw new BadRequestError('CPF já cadastrado')
+          throw new BadRequestError('CPF já cadastrado.')
         }
 
         // Se o ticket for informado, valida e verifica sua unicidade
         if (ticket) {
           if (!isTituloEleitor(ticket)) {
-            throw new BadRequestError('Ticket inválido')
+            throw new BadRequestError('Título inválido.')
           }
 
           const existingTicket = await prisma.applicant.findUnique({
@@ -96,7 +95,7 @@ export async function createApplicant(app: FastifyInstance) {
           })
 
           if (existingTicket) {
-            throw new BadRequestError('Ticket já cadastrado')
+            throw new BadRequestError('Título já cadastrado.')
           }
         }
 

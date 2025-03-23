@@ -1,7 +1,7 @@
 import { Header } from '@/components/header'
 import { OrganizationForm } from '../org/create-organization-form'
 
-export default function CreateApplicantPage() {
+export default function CreateOrganizationPage() {
   return (
     <div className="space-y-4 py-4">
       <Header />

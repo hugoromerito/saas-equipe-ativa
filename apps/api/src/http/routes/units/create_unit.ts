@@ -35,17 +35,19 @@ export async function createUnit(app: FastifyInstance) {
       async (request, reply) => {
         const userId = await request.getCurrentUserId()
         const { organizationSlug } = request.params
-        const { organization } =
+        const { organization, membership } =
           await request.getUserMembership(organizationSlug)
         const { name, description, location } = request.body
 
-        // Busca a organização pelo slug informado
-        // const organization = await prisma.organization.findUnique({
-        //   where: { slug: organizationSlug },
-        // })
-
         if (!organization) {
           throw new BadRequestError('Organização não encontrada')
+        }
+
+        // Verifica se o usuário tem permissão ADMIN
+        if (membership.role !== 'ADMIN') {
+          throw new BadRequestError(
+            'Apenas administradores podem criar unidades',
+          )
         }
 
         const unit = await prisma.unit.create({

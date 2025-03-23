@@ -38,7 +38,7 @@ export function OrganizationForm({
       {success === false && message && (
         <Alert variant="destructive">
           <AlertTriangle className="size-4" />
-          <AlertTitle>Save organization failed!</AlertTitle>
+          <AlertTitle>Falha ao criar organização!</AlertTitle>
           <AlertDescription>
             <p>{message}</p>
           </AlertDescription>
@@ -48,7 +48,7 @@ export function OrganizationForm({
       {success === true && message && (
         <Alert variant="success">
           <AlertTriangle className="size-4" />
-          <AlertTitle>Success!</AlertTitle>
+          <AlertTitle>Sucesso!</AlertTitle>
           <AlertDescription>
             <p>{message}</p>
           </AlertDescription>
