@@ -52,7 +52,7 @@
   },
   "eslintConfig": {
     "extends": [
-      "@saas/eslint-config/next"
+      "@saas/eslint-config/next-js"
     ]
   },
   "prettier": "@saas/prettier"
