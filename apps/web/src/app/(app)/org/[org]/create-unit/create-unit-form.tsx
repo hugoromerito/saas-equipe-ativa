@@ -4,7 +4,6 @@ import { AlertTriangle, Loader2 } from 'lucide-react'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
@@ -16,14 +15,8 @@ interface UnitFormProps {
   initialData?: UnitSchema
 }
 
-export function UnitForm({
-  // isUpdating = false,
-  initialData,
-}: UnitFormProps) {
+export function UnitForm({ initialData }: UnitFormProps) {
   const formAction = createUnitAction
-  // ? updateUnitAction
-  // : createUnitAction
-
   const [{ errors, message, success }, handleSubmit, isPending] = useFormState(
     formAction,
     () => {},
