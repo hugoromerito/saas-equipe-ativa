@@ -5,15 +5,16 @@ export const env = createEnv({
   server: {
     PORT: z.coerce.number().default(3333),
     DATABASE_URL: z.string().url(),
-  },
-  client: {},
-  shared: {
-    NEXT_PUBLIC_API_URL: z.string().url(),
+
     JWT_SECRET: z.string(),
 
     GOOGLE_OAUTH_CLIENT_ID: z.string(),
     GOOGLE_OAUTH_CLIENT_SECRET: z.string(),
     GOOGLE_OAUTH_CLIENT_REDIRECT_URI: z.string().url(),
+  },
+  client: {},
+  shared: {
+    NEXT_PUBLIC_API_URL: z.string().url(),
   },
   runtimeEnv: {
     PORT: process.env.PORT,
