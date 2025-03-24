@@ -16,15 +16,32 @@ console.log('Raw environment variables:', {
 export const env = createEnv({
   server: {
     PORT: z.coerce.number().default(3333),
-    DATABASE_URL: z.string().url(),
-    JWT_SECRET: z.string(),
-    GOOGLE_OAUTH_CLIENT_ID: z.string(),
-    GOOGLE_OAUTH_CLIENT_SECRET: z.string(),
-    GOOGLE_OAUTH_CLIENT_REDIRECT_URI: z.string().url(),
+    DATABASE_URL: z
+      .string()
+      .url()
+      .default(
+        'postgresql://neondb_owner:npg_AdsO72nVgwvE@ep-late-tooth-a5985332-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require',
+      ),
+    JWT_SECRET: z.string().default('0195c561-fab8-76ef-8562-db6b22e2348e'),
+    GOOGLE_OAUTH_CLIENT_ID: z
+      .string()
+      .default(
+        '383673663455-1a0gaafn9i7pot65qe7buo7n86dvnfob.apps.googleusercontent.com',
+      ),
+    GOOGLE_OAUTH_CLIENT_SECRET: z
+      .string()
+      .default('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'),
+    GOOGLE_OAUTH_CLIENT_REDIRECT_URI: z
+      .string()
+      .url()
+      .default('https://equipeativa.com/api/auth/callback'),
   },
   client: {},
   shared: {
-    NEXT_PUBLIC_API_URL: z.string().url(),
+    NEXT_PUBLIC_API_URL: z
+      .string()
+      .url()
+      .default('https://api.equipeativa.com'),
   },
   runtimeEnv: {
     PORT: process.env.PORT,
