@@ -112,6 +112,6 @@ app.register(createDemand)
 app.register(getDemands)
 app.register(updateDemand)
 
-app.listen({ port: env.PORT }).then(() => {
+app.listen({ port: env.PORT || 4000 }).then(() => {
   console.log('HTTP server running!')
 })
