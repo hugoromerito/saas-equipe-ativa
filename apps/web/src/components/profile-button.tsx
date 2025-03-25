@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
 import { auth } from '@/auth/auth'
+import { ThemeSwitcher } from './theme/theme-switcher'
 
 function getInitials(name: string): string {
   const initials = name
@@ -36,6 +37,12 @@ export async function ProfileButton() {
         <ChevronDown className="text-muted-foreground size-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
+        <DropdownMenuItem className="cursor-pointer md:hidden" asChild>
+          <div className="justify-baseline">
+            <ThemeSwitcher />
+            <span>Alterar tema</span>
+          </div>
+        </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer" asChild>
           <a href="/api/auth/sign-out">
             <LogOut className="mr-2 size-4" />
