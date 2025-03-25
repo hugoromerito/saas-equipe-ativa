@@ -16,6 +16,7 @@ import {
   getCheckApplicantAction,
   type ApplicantSchema,
 } from './actions'
+import { Checkbox } from '@/components/ui/checkbox'
 
 interface ApplicantFormProps {
   initialData?: ApplicantSchema
@@ -28,13 +29,20 @@ export function ApplicantForm({
   unitSlug,
 }: ApplicantFormProps) {
   const router = useRouter()
-  const [cpfInput, setCpfInput] = useState('')
   const [showFullForm, setShowFullForm] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
+  // Estados para os campos com checkbox
+  const [mother, setMother] = useState('')
+  const [motherNull, setMotherNull] = useState(false)
+  const [father, setFather] = useState('')
+  const [fatherNull, setFatherNull] = useState(false)
+  const [ticketNull, setTicketNull] = useState(false)
+
   const [birthdateInput, setBirthdateInput] = useState('')
   const [phoneInput, setPhoneInput] = useState('')
+  const [cpfInput, setCpfInput] = useState('')
   const [ticketInput, setTicketInput] = useState('')
 
   const formAction = createApplicantAction
@@ -66,6 +74,18 @@ export function ApplicantForm({
       .replace(/(\d{5})(\d)/, '$1-$2')
   }
 
+  function convertBirthdateToISO(value: string) {
+    // Remove qualquer caractere não numérico
+    const digits = strip(value)
+    if (digits.length === 8) {
+      const day = digits.slice(0, 2)
+      const month = digits.slice(2, 4)
+      const year = digits.slice(4, 8)
+      return `${year}-${month}-${day}`
+    }
+    return ''
+  }
+
   function formatBirthdate(value: string) {
     const digits = strip(value).slice(0, 8)
     return digits
@@ -85,7 +105,7 @@ export function ApplicantForm({
     setErrorMessage(null)
 
     if (!isCPF(cpfInput)) {
-      setErrorMessage('CPF inválido.')
+      setErrorMessage('CPF inválido, tente novamente.')
       return
     }
 
@@ -124,18 +144,6 @@ export function ApplicantForm({
             />
           </div>
 
-          {errorMessage && (
-            <Alert variant="destructive">
-              <AlertTriangle className="size-4" />
-              <AlertTitle>
-                Solicitante não encontrado ou cpf inválido!
-              </AlertTitle>
-              <AlertDescription>
-                <p>{errorMessage}</p>
-              </AlertDescription>
-            </Alert>
-          )}
-
           <Button className="w-full" type="submit" disabled={isPending}>
             {isPending ? (
               <Loader2 className="size-4 animate-spin" />
@@ -143,6 +151,15 @@ export function ApplicantForm({
               'Buscar solicitante'
             )}
           </Button>
+          {errorMessage && (
+            <Alert variant="destructive">
+              <AlertTriangle className="size-4" />
+              <AlertTitle>CPF inválido!</AlertTitle>
+              <AlertDescription>
+                <p>{errorMessage}</p>
+              </AlertDescription>
+            </Alert>
+          )}
         </form>
       )}
 
@@ -181,7 +198,6 @@ export function ApplicantForm({
           <div className="space-y-1">
             <Label htmlFor="birthdate">Data de nascimento</Label>
             <Input
-              name="birthdate"
               id="birthdate"
               value={formatBirthdate(birthdateInput)}
               onChange={(e) => {
@@ -192,7 +208,7 @@ export function ApplicantForm({
             <input
               type="hidden"
               name="birthdate"
-              value={strip(birthdateInput)}
+              value={convertBirthdateToISO(birthdateInput)}
             />
 
             {errors?.birthdate && (
@@ -204,7 +220,7 @@ export function ApplicantForm({
 
           <div className="space-y-1">
             <Label htmlFor="cpf">CPF</Label>
-            <Input name="cpf" id="cpf" defaultValue={cpfInput} readOnly />
+            <Input id="cpf" defaultValue={cpfInput} readOnly />
             <input type="hidden" name="cpf" value={strip(cpfInput)} />
 
             {errors?.cpf && (
@@ -217,7 +233,6 @@ export function ApplicantForm({
           <div className="space-y-1">
             <Label htmlFor="phone">Telefone</Label>
             <Input
-              name="phone"
               id="phone"
               value={formatPhone(phoneInput)}
               onChange={(e) => {
@@ -236,7 +251,30 @@ export function ApplicantForm({
 
           <div className="space-y-1">
             <Label htmlFor="mother">Nome da mãe</Label>
-            <Input name="mother" id="mother" />
+            <div className="flex items-center gap-2">
+              <Input
+                name="mother"
+                id="mother"
+                value={motherNull ? 'null' : mother}
+                onChange={(e) => setMother(e.target.value)}
+                disabled={motherNull}
+              />
+              <div className="flex items-start gap-1">
+                <div className="translate-y-0.5">
+                  <Checkbox
+                    name="motherNull"
+                    id="motherNull"
+                    checked={motherNull}
+                    onCheckedChange={(checked) => setMotherNull(!!checked)}
+                  />
+                </div>
+                <label htmlFor="motherNull" className="space-y-1">
+                  <span className="w-full text-sm leading-none font-medium whitespace-nowrap">
+                    Não consta
+                  </span>
+                </label>
+              </div>
+            </div>
             {errors?.mother && (
               <p className="text-xs font-medium text-red-500 dark:text-red-400">
                 {errors.mother[0]}
@@ -246,7 +284,25 @@ export function ApplicantForm({
 
           <div className="space-y-1">
             <Label htmlFor="father">Nome do pai</Label>
-            <Input name="father" id="father" />
+            <div className="flex items-center gap-2">
+              <Input name="father" id="father" />
+              <div className="flex items-start gap-1">
+                <div className="translate-y-0.5">
+                  <Checkbox
+                    name="shouldAttachUsersByDomain"
+                    id="shouldAttachUsersByDomain"
+                  />
+                </div>
+                <label
+                  htmlFor="shouldAttachUsersByDomain"
+                  className="space-y-1"
+                >
+                  <span className="w-full text-sm leading-none font-medium whitespace-nowrap">
+                    Não consta
+                  </span>
+                </label>
+              </div>
+            </div>
             {errors?.father && (
               <p className="text-xs font-medium text-red-500 dark:text-red-400">
                 {errors.father[0]}
@@ -256,16 +312,33 @@ export function ApplicantForm({
 
           <div className="space-y-1">
             <Label htmlFor="ticket">Título</Label>
-            <Input
-              name="ticket"
-              id="ticket"
-              value={formatTicket(ticketInput)}
-              onChange={(e) => {
-                const value = strip(e.target.value).slice(0, 12)
-                setTicketInput(value)
-              }}
-            />
-            <input type="hidden" name="ticket" value={strip(ticketInput)} />
+            <div className="flex items-center gap-2">
+              <Input
+                id="ticket"
+                value={formatTicket(ticketInput)}
+                onChange={(e) => {
+                  const value = strip(e.target.value).slice(0, 12)
+                  setTicketInput(value)
+                }}
+              />
+              <input type="hidden" name="ticket" value={strip(ticketInput)} />
+              <div className="flex items-start gap-1">
+                <div className="translate-y-0.5">
+                  <Checkbox
+                    name="shouldAttachUsersByDomain"
+                    id="shouldAttachUsersByDomain"
+                  />
+                </div>
+                <label
+                  htmlFor="shouldAttachUsersByDomain"
+                  className="space-y-1"
+                >
+                  <span className="w-full text-sm leading-none font-medium whitespace-nowrap">
+                    Não consta
+                  </span>
+                </label>
+              </div>
+            </div>
 
             {errors?.ticket && (
               <p className="text-xs font-medium text-red-500 dark:text-red-400">

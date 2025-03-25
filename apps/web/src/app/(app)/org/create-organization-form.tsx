@@ -14,6 +14,7 @@ import {
   updateOrganizationAction,
 } from './actions'
 import { useFormState } from '@/hooks/use-form-state'
+import { useRouter } from 'next/navigation'
 
 interface OrganizationFormProps {
   isUpdating?: boolean
@@ -28,9 +29,13 @@ export function OrganizationForm({
     ? updateOrganizationAction
     : createOrganizationAction
 
+  const router = useRouter()
+
   const [{ errors, message, success }, handleSubmit, isPending] = useFormState(
     formAction,
-    () => {},
+    () => {
+      router.push('/')
+    },
   )
 
   return (

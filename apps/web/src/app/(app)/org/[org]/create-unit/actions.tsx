@@ -14,7 +14,12 @@ const unitSchema = z.object({
   description: z.string().nullable(),
   location: z
     .string()
-    .min(4, { message: 'Por favor, inclua o endereço da unidade.' }),
+    .min(4, {
+      message: 'Por favor, insira o endereço completo da unidade.',
+    })
+    .refine((value) => value.split(' ').length > 1, {
+      message: 'Por favor, insira o endereço completo da unidade.',
+    }),
 })
 
 export type UnitSchema = z.infer<typeof unitSchema>

@@ -2,28 +2,54 @@
 
 import { HTTPError } from 'ky'
 import { revalidateTag } from 'next/cache'
-import { string, z } from 'zod'
+import { z } from 'zod'
+import { parsePhoneNumberFromString } from 'libphonenumber-js/max'
 
 import { createApplicant } from '@/http/create-applicant'
 import { getCurrentOrg } from '@/auth/auth'
 import { getCheckApplicant } from '@/http/get-check-applicant-slug'
+import { isTituloEleitor } from 'validation-br'
 const nameValidation = (value: string) => {
   const trimmed = value.trim()
   return trimmed.length >= 4 && trimmed.split(' ').length > 1
 }
 
+const birthdateSchema = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, {
+    message: 'Formato de data inválido.',
+  })
+  .refine(
+    (val) => {
+      const [year, month, day] = val.split('-').map(Number)
+      const date = new Date(year, month - 1, day)
+      return (
+        date.getFullYear() === year &&
+        date.getMonth() === month - 1 &&
+        date.getDate() === day
+      )
+    },
+    { message: 'Data de nascimento inválida' },
+  )
+
 const applicantSchema = z.object({
   name: z
     .string()
     .min(4, {
-      message: 'Por favor, insira seu nome completo.',
+      message: 'Por favor, insira o nome completo.',
     })
     .refine((value) => value.split(' ').length > 1, {
-      message: 'Por favor, insira seu nome completo.',
+      message: 'Por favor, insira o nome completo.',
     }),
-  birthdate: z.string(),
+  birthdate: birthdateSchema,
   cpf: z.string().min(11, { message: 'Por favor, insira o CPF válido.' }),
-  phone: z.string().min(11, { message: 'Insira um número válido.' }),
+  phone: z.string().refine(
+    (value) => {
+      const phoneNumber = parsePhoneNumberFromString(value, 'BR')
+      return phoneNumber !== undefined && phoneNumber.isValid()
+    },
+    { message: 'Insira um número válido.' },
+  ),
   mother: z
     .string()
     .nullable()
@@ -40,12 +66,21 @@ const applicantSchema = z.object({
     .nullable()
     .refine(
       (value) => {
-        if (value === null) return true
+        if (value === null || '') return true
         return nameValidation(value)
       },
       { message: 'Por favor, insira o nome completo do pai.' },
     ),
-  ticket: z.string().nullable(),
+  ticket: z
+    .string()
+    .nullable()
+    .refine(
+      (value) => {
+        if (value === null) return true // campo vazio é aceito
+        return isTituloEleitor(value) // se preenchido, valida nome completo
+      },
+      { message: 'Por favor, insira o título válido.' },
+    ),
   observation: z.string().nullable(),
 })
 

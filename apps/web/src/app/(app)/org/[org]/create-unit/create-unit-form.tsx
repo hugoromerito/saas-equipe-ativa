@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 
 import { useFormState } from '@/hooks/use-form-state'
 import { createUnitAction, type UnitSchema } from './actions'
+import { useRouter } from 'next/navigation'
 
 interface UnitFormProps {
   isUpdating?: boolean
@@ -17,9 +18,12 @@ interface UnitFormProps {
 
 export function UnitForm({ initialData }: UnitFormProps) {
   const formAction = createUnitAction
+  const router = useRouter()
   const [{ errors, message, success }, handleSubmit, isPending] = useFormState(
     formAction,
-    () => {},
+    () => {
+      router.back()
+    },
   )
 
   return (
