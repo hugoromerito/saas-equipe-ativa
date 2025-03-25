@@ -18,7 +18,7 @@ export default async function Projects() {
           <Button
             variant={'secondary'}
             className={
-              permissions?.can('get', 'Applicant')
+              permissions?.can('create', 'Demand')
                 ? 'text-md flex h-40 w-1/2 flex-col justify-center gap-4 font-normal md:h-80 md:w-1/4 md:text-xl'
                 : 'hidden'
             }
@@ -33,7 +33,7 @@ export default async function Projects() {
           <Button
             variant={'secondary'}
             className={
-              permissions?.can('get', 'Applicant')
+              permissions?.can('get', 'Demand')
                 ? 'text-md flex h-40 w-1/2 flex-col justify-center gap-4 font-normal md:h-80 md:w-1/4 md:text-xl'
                 : 'hidden'
             }
