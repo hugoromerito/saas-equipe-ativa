@@ -46,7 +46,7 @@ export async function createInvite(app: FastifyInstance) {
 
         if (cannot('create', 'Invite')) {
           throw new UnauthorizedError(
-            `You're not allowed to create new  invites.`,
+            `Você não possui permissão para convidar um usuário.`,
           )
         }
 

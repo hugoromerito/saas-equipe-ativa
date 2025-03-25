@@ -24,11 +24,13 @@ export async function createDemand(app: FastifyInstance) {
             description: z.string(),
             priority: z.nativeEnum(DemandPriority),
             category: z.nativeEnum(DemandCategory),
+            cep: z.string().nullable(),
+            state: z.string().nullable(),
+            city: z.string().nullable(),
             street: z.string().nullable(),
+            neighborhood: z.string().nullable(),
             complement: z.string().nullable(),
             number: z.string().nullable(),
-            neighborhood: z.string().nullable(),
-            cep: z.string().nullable(),
           }),
           params: z.object({
             organizationSlug: z.string(),
@@ -54,7 +56,7 @@ export async function createDemand(app: FastifyInstance) {
 
         if (cannot('create', 'Demand')) {
           throw new UnauthorizedError(
-            `You're not allowed to create new  invites.`,
+            `Você não possui permissão para registrar demandas.`,
           )
         }
 
@@ -86,7 +88,7 @@ export async function createDemand(app: FastifyInstance) {
           where: { id: applicantSlug },
         })
         if (!applicant) {
-          throw new BadRequestError('Applicant não encontrado')
+          throw new BadRequestError('Solicitante não encontrado')
         }
 
         // Busca o usuário autenticado para obter o nome
@@ -102,11 +104,13 @@ export async function createDemand(app: FastifyInstance) {
           description,
           priority,
           category,
+          cep,
+          state,
+          city,
           street,
+          neighborhood,
           complement,
           number,
-          neighborhood,
-          cep,
         } = request.body
 
         const demand = await prisma.demand.create({
@@ -115,11 +119,13 @@ export async function createDemand(app: FastifyInstance) {
             description,
             priority,
             category,
+            cep,
+            state,
+            city,
             street,
+            neighborhood,
             complement,
             number,
-            neighborhood,
-            cep,
             unitId: unit.id,
             applicantId: applicant.id,
             ownerId: userId,

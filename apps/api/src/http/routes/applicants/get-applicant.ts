@@ -24,7 +24,7 @@ export async function getApplicant(app: FastifyInstance) {
             200: z.object({
               id: z.string().uuid(),
               name: z.string(),
-              birthdate: z.string(),
+              birthdate: z.date(),
             }),
           },
         },

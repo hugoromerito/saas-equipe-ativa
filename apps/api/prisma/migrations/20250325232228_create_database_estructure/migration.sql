@@ -122,11 +122,13 @@ CREATE TABLE "demands" (
     "status" "DemandStatus" NOT NULL DEFAULT 'PENDING',
     "priority" "DemandPriority" NOT NULL,
     "category" "DemandCategory" NOT NULL,
+    "cep" TEXT,
+    "state" TEXT,
+    "city" TEXT,
     "street" TEXT,
+    "neighborhood" TEXT,
     "complement" TEXT,
     "number" TEXT,
-    "neighborhood" TEXT,
-    "cep" TEXT,
     "attachment" TEXT,
     "created_by_member" TEXT NOT NULL,
     "updated_by_member" TEXT,
@@ -190,7 +192,7 @@ CREATE UNIQUE INDEX "organizations_slug_key" ON "organizations"("slug");
 CREATE UNIQUE INDEX "organizations_domain_key" ON "organizations"("domain");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "applicants_cpf_ticket_organizationId_key" ON "applicants"("cpf", "ticket", "organizationId");
+CREATE UNIQUE INDEX "applicants_cpf_organizationId_key" ON "applicants"("cpf", "organizationId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "units_domain_key" ON "units"("domain");

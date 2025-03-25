@@ -41,7 +41,7 @@ export async function updateDemand(app: FastifyInstance) {
 
         if (cannot('update', 'Demand')) {
           throw new UnauthorizedError(
-            `You're not allowed to create new  invites.`,
+            `Você não possui permissão para atualizar essa demanda.`,
           )
         }
 

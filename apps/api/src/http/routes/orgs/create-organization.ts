@@ -19,7 +19,7 @@ export async function createOrganization(app: FastifyInstance) {
           security: [{ bearerAuth: [] }],
           body: z.object({
             name: z.string(),
-            domain: z.string().nullish(),
+            domain: z.string().nullable(),
             shouldAttachUsersByDomain: z.boolean().optional(),
           }),
           response: {
@@ -43,7 +43,21 @@ export async function createOrganization(app: FastifyInstance) {
 
           if (organizationByDomain) {
             throw new BadRequestError(
-              'Another organization with same domain already exists.',
+              'Já existe outra organização com o mesmo domínio.',
+            )
+          }
+
+          // Gera o slug a partir do nome
+          const slug = createSlug(name)
+
+          // Verifica se já existe organização com o mesmo slug
+          const organizationBySlug = await prisma.organization.findUnique({
+            where: { slug },
+          })
+
+          if (organizationBySlug) {
+            throw new BadRequestError(
+              'Já existe outra organização com o mesmo nome.',
             )
           }
         }

@@ -10,7 +10,7 @@ export async function updateAccount(app: FastifyInstance) {
         body: z.object({
           name: z.string(),
           email: z.string().email(),
-          birthdate: z.string(),
+          birthdate: z.date(),
           ticket: z.string().max(12),
           cpf: z.string().min(11).max(11),
           mother: z.string().nullable(),

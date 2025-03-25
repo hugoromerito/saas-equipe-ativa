@@ -33,11 +33,13 @@ export async function getDemands(app: FastifyInstance) {
                   status: z.nativeEnum(DemandStatus),
                   priority: z.nativeEnum(DemandPriority),
                   category: z.nativeEnum(DemandCategory),
+                  cep: z.string().nullable(),
+                  state: z.string().nullable(),
+                  city: z.string().nullable(),
                   street: z.string().nullable(),
+                  neighborhood: z.string().nullable(),
                   complement: z.string().nullable(),
                   number: z.string().nullable(),
-                  neighborhood: z.string().nullable(),
-                  cep: z.string().nullable(),
                 }),
               ),
             }),
@@ -53,7 +55,9 @@ export async function getDemands(app: FastifyInstance) {
         const { cannot } = getUserPermissions(userId, membership.role)
 
         if (cannot('get', 'Demand')) {
-          throw new UnauthorizedError(`You're not allowed to view demands.`)
+          throw new UnauthorizedError(
+            `Você não possui permissão para visualizar as demandas.`,
+          )
         }
 
         const demands = await prisma.demand.findMany({
@@ -69,6 +73,8 @@ export async function getDemands(app: FastifyInstance) {
             number: true,
             neighborhood: true,
             cep: true,
+            city: true,
+            state: true,
           },
           where: {
             unit: {

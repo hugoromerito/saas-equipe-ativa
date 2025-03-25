@@ -72,14 +72,20 @@ export async function createApplicant(app: FastifyInstance) {
           throw new BadRequestError('Organização não encontrada.')
         }
 
-        // Verifica se já existe um applicant com o mesmo CPF
-        const existingCpf = await prisma.applicant.findUnique({
-          where: { cpf },
-        })
-
         if (!isCPF(cpf)) {
           throw new BadRequestError('CPF inválido.')
         }
+
+        // Verifica se já existe um applicant com o mesmo CPF
+        const existingCpf = await prisma.applicant.findUnique({
+          where: {
+            cpf_organizationId: {
+              cpf: cpf,
+              organizationId: organization.id,
+            },
+          },
+        })
+
         if (existingCpf) {
           throw new BadRequestError('CPF já cadastrado.')
         }
@@ -90,8 +96,11 @@ export async function createApplicant(app: FastifyInstance) {
             throw new BadRequestError('Título inválido.')
           }
 
-          const existingTicket = await prisma.applicant.findUnique({
-            where: { ticket },
+          const existingTicket = await prisma.applicant.findFirst({
+            where: {
+              ticket,
+              organizationId: organization.id,
+            },
           })
 
           if (existingTicket) {

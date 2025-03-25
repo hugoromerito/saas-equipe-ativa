@@ -47,7 +47,7 @@ export async function updateOrganization(app: FastifyInstance) {
 
         if (cannot('update', authOrganization)) {
           throw new UnauthorizedError(
-            `You're not allowed to update this organization.`,
+            `Você não possui permissão para atualizar essa organização.`,
           )
         }
 

@@ -120,6 +120,9 @@ importers:
       '@saas/env':
         specifier: workspace:*
         version: link:../../packages/env
+      cep-promise:
+        specifier: ^4.4.1
+        version: 4.4.1
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -1829,6 +1832,9 @@ packages:
   caniuse-lite@1.0.30001705:
     resolution: {integrity: sha512-S0uyMMiYvA7CxNgomYBwwwPUnWzFD83f3B1ce5jHUfHTH//QL6hHsreI8RVC5606R4ssqravelYO5TU6t8sEyg==}
 
+  cep-promise@4.4.1:
+    resolution: {integrity: sha512-YC4vXorKvGurfx0H008Y5lEo9+9ScqeM25dOTbhXx1sRA3knTHWbvtO7yyqZcH+CWqzP5rCxO8cZP3qVZV++ww==}
+
   chalk@4.1.2:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
     engines: {node: '>=10'}
@@ -2863,6 +2869,15 @@ packages:
       sass:
         optional: true
 
+  node-fetch@2.6.7:
+    resolution: {integrity: sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==}
+    engines: {node: 4.x || >=6.0.0}
+    peerDependencies:
+      encoding: ^0.1.0
+    peerDependenciesMeta:
+      encoding:
+        optional: true
+
   node-fetch@2.7.0:
     resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
     engines: {node: 4.x || >=6.0.0}
@@ -3591,6 +3606,9 @@ packages:
 
   undici-types@6.20.0:
     resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
+
+  unfetch@4.1.0:
+    resolution: {integrity: sha512-crP/n3eAPUJxZXM9T80/yv0YhkTEx2K1D3h7D1AJM6fzsWZrxdyRuLN0JH/dkZh1LNH8LxCnBzoPFCPbb2iGpg==}
 
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
@@ -5113,6 +5131,13 @@ snapshots:
 
   caniuse-lite@1.0.30001705: {}
 
+  cep-promise@4.4.1:
+    dependencies:
+      node-fetch: 2.6.7
+      unfetch: 4.1.0
+    transitivePeerDependencies:
+      - encoding
+
   chalk@4.1.2:
     dependencies:
       ansi-styles: 4.3.0
@@ -6350,6 +6375,10 @@ snapshots:
       - '@babel/core'
       - babel-plugin-macros
 
+  node-fetch@2.6.7:
+    dependencies:
+      whatwg-url: 5.0.0
+
   node-fetch@2.7.0:
     dependencies:
       whatwg-url: 5.0.0
@@ -7098,6 +7127,8 @@ snapshots:
   undici-types@6.19.8: {}
 
   undici-types@6.20.0: {}
+
+  unfetch@4.1.0: {}
 
   uri-js@4.4.1:
     dependencies:

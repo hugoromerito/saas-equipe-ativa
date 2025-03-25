@@ -156,7 +156,7 @@ model Applicant {
 
   demands Demand[]
 
-  @@unique([cpf, ticket, organizationId])
+  @@unique([cpf, organizationId])
   @@map("applicants")
 }
 
@@ -195,11 +195,13 @@ model Demand {
   status              DemandStatus   @default(PENDING)
   priority            DemandPriority
   category            DemandCategory
+  cep                 String?
+  state               String?
+  city                String?
   street              String?
+  neighborhood        String?
   complement          String?
   number              String?
-  neighborhood        String?
-  cep                 String?
   attachment          String? //  Antes e depois
   createdByMemberName String         @map("created_by_member")
   updatedByMemberName String?        @map("updated_by_member")
