@@ -32,12 +32,36 @@ const birthdateSchema = z
     { message: 'Data de nascimento inválida' },
   )
 
+const nullableNameSchema = z.preprocess(
+  (val) => {
+    if (typeof val === 'string' && val === 'null') return null
+    return val
+  },
+  z.union([
+    z.string().refine(nameValidation, {
+      message: 'Por favor, insira o nome completo.',
+    }),
+    z.null(),
+  ]),
+)
+
+const nullableTicketSchema = z.preprocess(
+  (val) => {
+    if (typeof val === 'string' && val === 'null') return null
+    return val
+  },
+  z.union([
+    z.string().refine(isTituloEleitor, {
+      message: 'Por favor, insira o título válido.',
+    }),
+    z.null(),
+  ]),
+)
+
 const applicantSchema = z.object({
   name: z
     .string()
-    .min(4, {
-      message: 'Por favor, insira o nome completo.',
-    })
+    .min(4, { message: 'Por favor, insira o nome completo.' })
     .refine((value) => value.split(' ').length > 1, {
       message: 'Por favor, insira o nome completo.',
     }),
@@ -50,37 +74,9 @@ const applicantSchema = z.object({
     },
     { message: 'Insira um número válido.' },
   ),
-  mother: z
-    .string()
-    .nullable()
-    .refine(
-      (value) => {
-        if (value === null) return true // campo vazio é aceito
-        return nameValidation(value) // se preenchido, valida nome completo
-      },
-      { message: 'Por favor, insira o nome completo da mãe.' },
-    ),
-
-  father: z
-    .string()
-    .nullable()
-    .refine(
-      (value) => {
-        if (value === null || '') return true
-        return nameValidation(value)
-      },
-      { message: 'Por favor, insira o nome completo do pai.' },
-    ),
-  ticket: z
-    .string()
-    .nullable()
-    .refine(
-      (value) => {
-        if (value === null) return true // campo vazio é aceito
-        return isTituloEleitor(value) // se preenchido, valida nome completo
-      },
-      { message: 'Por favor, insira o título válido.' },
-    ),
+  mother: nullableNameSchema,
+  father: nullableNameSchema,
+  ticket: nullableTicketSchema,
   observation: z.string().nullable(),
 })
 

@@ -37,13 +37,13 @@ export function ApplicantForm({
   const [mother, setMother] = useState('')
   const [motherNull, setMotherNull] = useState(false)
   const [father, setFather] = useState('')
+  const [ticket, setTicket] = useState('')
   const [fatherNull, setFatherNull] = useState(false)
   const [ticketNull, setTicketNull] = useState(false)
 
   const [birthdateInput, setBirthdateInput] = useState('')
   const [phoneInput, setPhoneInput] = useState('')
   const [cpfInput, setCpfInput] = useState('')
-  const [ticketInput, setTicketInput] = useState('')
 
   const formAction = createApplicantAction
   const [{ errors, message, success, applicantId }, handleSubmit] =
@@ -253,11 +253,16 @@ export function ApplicantForm({
             <Label htmlFor="mother">Nome da mãe</Label>
             <div className="flex items-center gap-2">
               <Input
-                name="mother"
                 id="mother"
                 value={motherNull ? 'null' : mother}
                 onChange={(e) => setMother(e.target.value)}
                 disabled={motherNull}
+              />
+              <input
+                type="hidden"
+                name="mother"
+                id="mother"
+                value={motherNull ? 'null' : mother}
               />
               <div className="flex items-start gap-1">
                 <div className="translate-y-0.5">
@@ -285,18 +290,28 @@ export function ApplicantForm({
           <div className="space-y-1">
             <Label htmlFor="father">Nome do pai</Label>
             <div className="flex items-center gap-2">
-              <Input name="father" id="father" />
+              <Input
+                id="father"
+                value={fatherNull ? 'null' : father}
+                onChange={(e) => setFather(e.target.value)}
+                disabled={fatherNull}
+              />
+              <input
+                type="hidden"
+                name="father"
+                id="father"
+                value={fatherNull ? 'null' : father}
+              />
               <div className="flex items-start gap-1">
                 <div className="translate-y-0.5">
                   <Checkbox
-                    name="shouldAttachUsersByDomain"
-                    id="shouldAttachUsersByDomain"
+                    name="fatherNull"
+                    id="fatherNull"
+                    checked={fatherNull}
+                    onCheckedChange={(checked) => setFatherNull(!!checked)}
                   />
                 </div>
-                <label
-                  htmlFor="shouldAttachUsersByDomain"
-                  className="space-y-1"
-                >
+                <label htmlFor="fatherNull" className="space-y-1">
                   <span className="w-full text-sm leading-none font-medium whitespace-nowrap">
                     Não consta
                   </span>
@@ -315,24 +330,26 @@ export function ApplicantForm({
             <div className="flex items-center gap-2">
               <Input
                 id="ticket"
-                value={formatTicket(ticketInput)}
-                onChange={(e) => {
-                  const value = strip(e.target.value).slice(0, 12)
-                  setTicketInput(value)
-                }}
+                value={ticketNull ? 'null' : ticket}
+                onChange={(e) => setTicket(e.target.value)}
+                disabled={ticketNull}
               />
-              <input type="hidden" name="ticket" value={strip(ticketInput)} />
+              <input
+                type="hidden"
+                name="ticket"
+                id="ticket"
+                value={ticketNull ? 'null' : ticket}
+              />
               <div className="flex items-start gap-1">
                 <div className="translate-y-0.5">
                   <Checkbox
-                    name="shouldAttachUsersByDomain"
-                    id="shouldAttachUsersByDomain"
+                    name="ticketNull"
+                    id="ticketNull"
+                    checked={ticketNull}
+                    onCheckedChange={(checked) => setTicketNull(!!checked)}
                   />
                 </div>
-                <label
-                  htmlFor="shouldAttachUsersByDomain"
-                  className="space-y-1"
-                >
+                <label htmlFor="ticketNull" className="space-y-1">
                   <span className="w-full text-sm leading-none font-medium whitespace-nowrap">
                     Não consta
                   </span>
