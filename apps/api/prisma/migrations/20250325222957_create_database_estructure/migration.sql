@@ -193,10 +193,10 @@ CREATE UNIQUE INDEX "organizations_domain_key" ON "organizations"("domain");
 CREATE UNIQUE INDEX "applicants_cpf_ticket_organizationId_key" ON "applicants"("cpf", "ticket", "organizationId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "units_slug_key" ON "units"("slug");
+CREATE UNIQUE INDEX "units_domain_key" ON "units"("domain");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "units_domain_key" ON "units"("domain");
+CREATE UNIQUE INDEX "units_slug_organization_id_key" ON "units"("slug", "organization_id");
 
 -- AddForeignKey
 ALTER TABLE "tokens" ADD CONSTRAINT "tokens_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

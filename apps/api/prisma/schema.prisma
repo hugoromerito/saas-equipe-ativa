@@ -231,7 +231,7 @@ model Billing {
 model Unit {
   id          String   @id @default(uuid())
   name        String
-  slug        String   @unique
+  slug        String
   domain      String?  @unique
   description String?
   location    String
@@ -248,5 +248,6 @@ model Unit {
   owner   User   @relation(fields: [ownerId], references: [id], onDelete: Restrict)
   ownerId String @map("owner_id")
 
+  @@unique([slug, organizationId])
   @@map("units")
 }
