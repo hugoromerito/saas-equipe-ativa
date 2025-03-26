@@ -9,11 +9,13 @@ interface CreateDemandRequest {
   description: String
   priority: DemandPriority
   category: DemandCategory
+  cep: String | null
+  state: String | null
+  city: String | null
   street: String | null
   complement: String | null
   number: String | null
   neighborhood: String | null
-  cep: String | null
 }
 
 type CreateDemandResponse = void
@@ -31,6 +33,8 @@ export async function createDemand({
   number,
   neighborhood,
   cep,
+  state,
+  city,
 }: CreateDemandRequest): Promise<CreateDemandResponse> {
   await api.post(
     `organizations/${organizationSlug}/units/${unitSlug}/applicants/${applicantSlug}/demands`,
@@ -48,6 +52,8 @@ export async function createDemand({
         number,
         neighborhood,
         cep,
+        state,
+        city,
       },
     },
   )

@@ -19,8 +19,6 @@ export async function createOrganization(app: FastifyInstance) {
           security: [{ bearerAuth: [] }],
           body: z.object({
             name: z.string(),
-            domain: z.string().nullable(),
-            shouldAttachUsersByDomain: z.boolean().optional(),
           }),
           response: {
             201: z.object({
@@ -32,42 +30,26 @@ export async function createOrganization(app: FastifyInstance) {
       async (request, reply) => {
         const userId = await request.getCurrentUserId()
 
-        const { name, domain, shouldAttachUsersByDomain } = request.body
+        const { name } = request.body
 
-        if (domain) {
-          const organizationByDomain = await prisma.organization.findUnique({
-            where: {
-              domain,
-            },
-          })
+        // Gera o slug a partir do nome
+        const slug = createSlug(name)
 
-          if (organizationByDomain) {
-            throw new BadRequestError(
-              'Já existe outra organização com o mesmo domínio.',
-            )
-          }
+        // Verifica se já existe organização com o mesmo slug
+        const organizationBySlug = await prisma.organization.findUnique({
+          where: { slug },
+        })
 
-          // Gera o slug a partir do nome
-          const slug = createSlug(name)
-
-          // Verifica se já existe organização com o mesmo slug
-          const organizationBySlug = await prisma.organization.findUnique({
-            where: { slug },
-          })
-
-          if (organizationBySlug) {
-            throw new BadRequestError(
-              'Já existe outra organização com o mesmo nome.',
-            )
-          }
+        if (organizationBySlug) {
+          throw new BadRequestError(
+            'Já existe outra organização com o mesmo nome.',
+          )
         }
 
         const organization = await prisma.organization.create({
           data: {
             name,
             slug: createSlug(name),
-            domain,
-            shouldAttachUsersByDomain,
             ownerId: userId,
             members: {
               create: {

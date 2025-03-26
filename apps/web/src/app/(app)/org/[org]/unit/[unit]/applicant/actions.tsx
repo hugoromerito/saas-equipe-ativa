@@ -14,23 +14,24 @@ const nameValidation = (value: string) => {
   return trimmed.length >= 4 && trimmed.split(' ').length > 1
 }
 
-const birthdateSchema = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/, {
-    message: 'Formato de data inválido.',
-  })
-  .refine(
-    (val) => {
-      const [year, month, day] = val.split('-').map(Number)
-      const date = new Date(year, month - 1, day)
-      return (
-        date.getFullYear() === year &&
-        date.getMonth() === month - 1 &&
-        date.getDate() === day
-      )
-    },
-    { message: 'Data de nascimento inválida' },
-  )
+const birthdateSchema = z.preprocess((arg) => {
+  if (typeof arg === 'string') {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(arg)) {
+      throw new Error('Formato de data inválido.')
+    }
+    const [year, month, day] = arg.split('-').map(Number)
+    const date = new Date(year, month - 1, day)
+    if (
+      date.getFullYear() !== year ||
+      date.getMonth() !== month - 1 ||
+      date.getDate() !== day
+    ) {
+      throw new Error('Data de nascimento inválida')
+    }
+    return date
+  }
+  return arg
+}, z.date())
 
 const nullableNameSchema = z.preprocess(
   (val) => {

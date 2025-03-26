@@ -3,7 +3,7 @@ import { api } from './api-client'
 interface CreateApplicantRequest {
   organizationSlug: String
   name: string
-  birthdate: string
+  birthdate: Date
   cpf: string
   phone: string
   mother: string | null

@@ -71,7 +71,7 @@ export function OrganizationForm({
         )}
       </div>
 
-      <div className="space-y-1">
+      {/* <div className="space-y-1">
         <Label htmlFor="domain">Domínio de e-mail</Label>
         <Input
           name="domain"
@@ -114,7 +114,7 @@ export function OrganizationForm({
             {errors.shouldAttachUsersByDomain[0]}
           </p>
         )}
-      </div>
+      </div> */}
 
       <Button className="w-full" type="submit" disabled={isPending}>
         {isPending ? (

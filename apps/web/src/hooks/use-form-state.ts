@@ -1,4 +1,5 @@
 import { useState, useTransition, type FormEvent } from 'react'
+import { requestFormReset } from 'react-dom'
 
 interface BaseFormState {
   success: boolean
@@ -36,6 +37,8 @@ export function useFormState<T extends BaseFormState = BaseFormState>(
 
       setFormState(state)
     })
+
+    requestFormReset(form)
   }
 
   return [formState, handleSubmit, isPending] as const

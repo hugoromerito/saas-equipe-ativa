@@ -16,10 +16,11 @@ export async function ApplicantName() {
   }
 
   function formatBirthdate(value: string) {
-    const digits = strip(value).slice(0, 8)
-    return digits
-      .replace(/(\d{2})(\d)/, '$1/$2')
-      .replace(/(\d{2})(\d)/, '$1/$2')
+    const digits = strip(value).slice(0, 8) // garante que só há 8 dígitos (YYYYMMDD)
+    const year = digits.slice(0, 4)
+    const month = digits.slice(4, 6)
+    const day = digits.slice(6, 8)
+    return `${day}/${month}/${year}`
   }
 
   return (

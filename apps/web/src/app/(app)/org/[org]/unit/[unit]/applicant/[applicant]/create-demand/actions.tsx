@@ -6,16 +6,11 @@ import { z } from 'zod'
 
 import { createDemand } from '@/http/create-demand'
 import {
-  getCurrentApplicant,
   getCurrentApplicantId,
   getCurrentOrg,
   getCurrentUnit,
 } from '@/auth/auth'
-import {
-  demandCategorySchema,
-  demandPrioritySchema,
-  demandStatusSchema,
-} from '@saas/auth'
+import { demandCategorySchema, demandPrioritySchema } from '@saas/auth'
 import { applicantSchema } from '@saas/auth/src/models/applicant'
 import { getApplicant } from '@/http/get-applicant'
 
@@ -32,12 +27,13 @@ const demandSchema = z.object({
   category: demandCategorySchema.refine((val) => !!val, {
     message: 'Por favor, selecione a categoria da demanda.',
   }),
-
   street: z.string().nullable(),
   complement: z.string().nullable(),
   number: z.string().nullable(),
   neighborhood: z.string().nullable(),
   cep: z.string().nullable(),
+  state: z.string().nullable(),
+  city: z.string().nullable(),
 })
 
 export type DemandSchema = z.infer<typeof demandSchema>
@@ -65,6 +61,8 @@ export async function createDemandAction(data: FormData) {
     number,
     neighborhood,
     cep,
+    state,
+    city,
   } = result.data
 
   try {
@@ -81,6 +79,8 @@ export async function createDemandAction(data: FormData) {
       number,
       neighborhood,
       cep,
+      state,
+      city,
     })
 
     revalidateTag('demands')
