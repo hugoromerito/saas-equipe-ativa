@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import WhatsappButton from '@/components/whatsapp-button'
 import { ThemeProvider } from 'next-themes'
+import { Providers } from './provider'
 
 export const metadata: Metadata = {
   title: 'Equipe Ativa',
@@ -22,7 +23,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <main className="mx-auto w-full max-w-[1200px] space-y-4 p-6">
-            {children}
+            <Providers>{children}</Providers>
           </main>
           <WhatsappButton />
         </ThemeProvider>

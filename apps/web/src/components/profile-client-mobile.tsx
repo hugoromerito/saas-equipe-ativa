@@ -1,4 +1,6 @@
-import { ChevronDown, LogOut } from 'lucide-react'
+'use client'
+
+import { ChevronDown, LogOut, Moon, Sun } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import {
   DropdownMenu,
@@ -6,20 +8,27 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu'
-import { auth } from '@/auth/auth'
-import { ThemeSwitcher } from './theme/theme-switcher'
+import { useTheme } from 'next-themes'
+import { Button } from './ui/button'
 
 function getInitials(name: string): string {
-  const initials = name
+  return name
     .split(' ')
     .map((word) => word.charAt(0).toUpperCase())
     .slice(0, 2)
     .join('')
-  return initials
 }
 
-export async function ProfileButton() {
-  const { user } = await auth()
+interface ProfileClientProps {
+  user: {
+    name: string
+    email: string
+    avatarUrl?: string
+  }
+}
+
+export function ProfileClientMobile({ user }: ProfileClientProps) {
+  const { setTheme } = useTheme()
 
   return (
     <DropdownMenu>
@@ -37,10 +46,26 @@ export async function ProfileButton() {
         <ChevronDown className="text-muted-foreground size-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem className="cursor-pointer md:hidden" asChild>
+        <DropdownMenuItem
+          className="flex cursor-pointer items-center justify-center"
+          onClick={() => setTheme('light')}
+        >
           <div className="justify-baseline">
-            <ThemeSwitcher />
-            <span>Alterar tema</span>
+            <Button size={'icon'} variant={'ghost'}>
+              <Sun className="flex size-4" />
+              <span className="sr-only">Alternar tema claro</span>
+            </Button>
+          </div>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className="flex cursor-pointer items-center justify-center"
+          onClick={() => setTheme('dark')}
+        >
+          <div className="justify-baseline">
+            <Button size={'icon'} variant={'ghost'}>
+              <Moon className="flex size-4" />
+              <span className="sr-only">Alternar tema escuro</span>
+            </Button>
           </div>
         </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer" asChild>

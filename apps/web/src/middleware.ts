@@ -29,6 +29,14 @@ export function middleware(request: NextRequest) {
     response.cookies.delete('applicant')
   }
 
+  if (pathname.startsWith('/invites')) {
+    const [, , inviteIdSlug] = pathname.split('/')
+
+    response.cookies.set('inviteId', inviteIdSlug)
+  } else {
+    response.cookies.delete('inviteId')
+  }
+
   return response
 }
 

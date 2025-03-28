@@ -1,5 +1,7 @@
 import { getApplicant } from '@/http/get-applicant'
+import { getInvite } from '@/http/get-invite'
 import { getMembership } from '@/http/get-membership'
+import { getPendingInvites } from '@/http/get-pending-invites'
 import { getProfile } from '@/http/get-profile'
 import { getUnits } from '@/http/get-units'
 import { defineAbilityFor } from '@saas/auth'
@@ -30,6 +32,22 @@ export async function getCurrentUnits() {
   return units
 }
 
+export async function getCurrentPendingInvites() {
+  const { invites } = await getPendingInvites()
+
+  return invites
+}
+
+export async function getCurrentPendingInvite() {
+  const inviteId = await getCurrentInviteId()
+  if (!inviteId) {
+    return null
+  }
+  const { invite } = await getInvite(inviteId)
+
+  return invite
+}
+
 export async function getCurrentApplicant() {
   const organizationSlug = await getCurrentOrg()
   const applicantSlug = await getCurrentApplicantId()
@@ -45,6 +63,10 @@ export async function getCurrentApplicant() {
 
 export async function getCurrentUnit() {
   return (await cookies()).get('unit')?.value ?? null
+}
+
+export async function getCurrentInviteId() {
+  return (await cookies()).get('inviteId')?.value ?? null
 }
 
 export async function getCurrentMembership() {

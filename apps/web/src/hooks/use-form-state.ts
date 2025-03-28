@@ -38,7 +38,7 @@ export function useFormState<T extends BaseFormState = BaseFormState>(
       setFormState(state)
     })
 
-    requestFormReset(form)
+    // requestFormReset(form)
   }
 
   return [formState, handleSubmit, isPending] as const
