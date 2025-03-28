@@ -40,6 +40,10 @@ import { getCheckApplicant } from './routes/applicants/get-check-applicant'
 import { getApplicant } from './routes/applicants/get-applicant'
 import { getInvite } from './routes/invites/get-invite'
 import { getInvites } from './routes/invites/get-invites'
+import { getPendingInvites } from './routes/invites/get-pending-invites'
+import { rejectInvite } from './routes/invites/reject-invite'
+import { getMembersOrganization } from './routes/members/get-members-organization'
+import { getMembersUnit } from './routes/members/get-members-unit'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -103,10 +107,15 @@ app.register(getMembership)
 app.register(createUnit)
 app.register(getUnits)
 
+app.register(getMembersOrganization)
+app.register(getMembersUnit)
+
 app.register(createInvite)
 app.register(getInvites)
+app.register(getPendingInvites)
 app.register(getInvite)
 app.register(acceptInvite)
+app.register(rejectInvite)
 
 app.register(createApplicant)
 app.register(getApplicant)

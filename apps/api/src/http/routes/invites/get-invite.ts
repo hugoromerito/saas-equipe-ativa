@@ -30,13 +30,15 @@ export async function getInvite(app: FastifyInstance) {
                     avatarUrl: z.string().url().nullable(),
                   })
                   .nullable(),
-                unit: z.object({
-                  name: z.string(),
-                  location: z.string(),
-                  organization: z.object({
+                unit: z
+                  .object({
                     name: z.string(),
-                  }),
-                }),
+                    location: z.string(),
+                    organization: z.object({
+                      name: z.string(),
+                    }),
+                  })
+                  .nullable(),
               }),
             })
             .nullable(),

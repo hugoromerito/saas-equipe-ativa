@@ -26,6 +26,7 @@ export const permissions: Record<Role, PermissionsByRole> = {
     cannot('delete', 'User') // Não pode deletar um usuário
   },
   CLERK: (user, { can }) => {
+    can('get', 'Applicant') // Pode visualizar applicant
     can('create', 'Applicant') // Pode criar applicant
     can('create', 'Demand') // Pode criar demandas
     can('get', 'Demand', { ownerId: { $eq: user.id } }) // Pode listar demandas próprias

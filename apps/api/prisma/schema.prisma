@@ -81,8 +81,8 @@ model Invite {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String       @map("organization_id")
 
-  unit   Unit   @relation(fields: [unitId], references: [id], onDelete: Cascade)
-  unitId String @map("unit_id")
+  unit   Unit?   @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  unitId String? @map("unit_id")
 
   @@unique([email, organizationId, unitId])
   @@index([email])

@@ -2,7 +2,6 @@ import { auth } from '@/http/middlewares/auth'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { roleSchema } from '@saas/auth'
 import { DemandCategory, DemandPriority, DemandStatus } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { getUserPermissions } from '@/utils/get-user-permissions'
@@ -50,7 +49,7 @@ export async function getDemands(app: FastifyInstance) {
         const { organizationSlug, unitSlug } = request.params
         const userId = await request.getCurrentUserId()
 
-        const { membership } = await request.getUserMembership(unitSlug)
+        const { membership } = await request.getUserMembership(organizationSlug)
 
         const { cannot } = getUserPermissions(userId, membership.role)
 

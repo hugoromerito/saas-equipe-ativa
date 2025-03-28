@@ -1,42 +1,44 @@
-import { auth } from '@/http/middlewares/auth'
-import { prisma } from '@/lib/prisma'
+import { roleSchema } from '@saas/auth'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
-import z from 'zod'
-import { BadRequestError } from '../_errors/bad-request-error'
-import { roleSchema } from '@saas/auth'
+import { z } from 'zod'
 
-export async function getInvites(app: FastifyInstance) {
+import { auth } from '@/http/middlewares/auth'
+import { BadRequestError } from '@/http/routes/_errors/bad-request-error'
+import { prisma } from '@/lib/prisma'
+
+export async function getPendingInvites(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
     .get(
-      '/invites',
+      '/pending-invites',
       {
         schema: {
-          tags: ['invites'],
-          summary: 'Get all organization invites',
+          tags: ['Invites'],
+          summary: 'Get all user pending invites',
           security: [{ bearerAuth: [] }],
           response: {
             200: z.object({
               invites: z.array(
                 z.object({
                   id: z.string().uuid(),
-                  email: z.string().email(),
                   role: roleSchema,
+                  email: z.string().email(),
                   createdAt: z.date(),
-                  author: z
-                    .object({
-                      id: z.string().uuid(),
-                      name: z.string().nullable(),
-                    })
-                    .nullable(),
                   unit: z
                     .object({
                       name: z.string(),
                       organization: z.object({
                         name: z.string(),
                       }),
+                    })
+                    .nullable(),
+                  author: z
+                    .object({
+                      id: z.string().uuid(),
+                      name: z.string().nullable(),
+                      avatarUrl: z.string().url().nullable(),
                     })
                     .nullable(),
                 }),
@@ -47,10 +49,10 @@ export async function getInvites(app: FastifyInstance) {
       },
       async (request) => {
         const userId = await request.getCurrentUserId()
+        console.log('User ID:', userId)
 
         const currentUser = await prisma.user.findUnique({
           where: { id: userId },
-          select: { email: true },
         })
 
         if (!currentUser) {
@@ -58,9 +60,6 @@ export async function getInvites(app: FastifyInstance) {
         }
 
         const invites = await prisma.invite.findMany({
-          where: {
-            email: currentUser.email,
-          },
           select: {
             id: true,
             email: true,
@@ -70,6 +69,7 @@ export async function getInvites(app: FastifyInstance) {
               select: {
                 id: true,
                 name: true,
+                avatarUrl: true,
               },
             },
             unit: {
@@ -83,8 +83,8 @@ export async function getInvites(app: FastifyInstance) {
               },
             },
           },
-          orderBy: {
-            createdAt: 'desc',
+          where: {
+            email: currentUser.email,
           },
         })
 
