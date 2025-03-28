@@ -13,13 +13,7 @@ import { rejectInvite } from '@/http/reject-invite'
 
 dayjs.extend(relativeTime).locale('pt-br')
 
-interface InvitePageProps {
-  params: {
-    id: string
-  }
-}
-
-export default async function InvitePage({ params }: InvitePageProps) {
+export default async function InvitePage() {
   const invite = await getCurrentPendingInvite()
   const isUserAuthenticated = isAuthenticated()
 
