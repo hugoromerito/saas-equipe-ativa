@@ -21,7 +21,11 @@ export async function createApplicant(app: FastifyInstance) {
           security: [{ bearerAuth: [] }],
           body: z.object({
             name: z.string(),
-            birthdate: z.string(),
+            birthdate: z.preprocess((arg) => {
+              if (typeof arg === 'string' || arg instanceof Date) {
+                return new Date(arg)
+              }
+            }, z.date()),
             cpf: z.string(),
             phone: z.string(),
             mother: z.string().nullable(),
