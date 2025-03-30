@@ -34,7 +34,7 @@ import { acceptInvite } from './routes/invites/accept-invite'
 import { getUnits } from './routes/units/get-units'
 import { createApplicant } from './routes/applicants/create-applicant'
 import { createDemand } from './routes/demands/create-demand'
-import { getDemands } from './routes/demands/get-demand'
+import { getDemands } from './routes/demands/get-demands'
 import { updateDemand } from './routes/demands/update-demand'
 import { getCheckApplicant } from './routes/applicants/get-check-applicant'
 import { getApplicant } from './routes/applicants/get-applicant'
@@ -44,6 +44,7 @@ import { getPendingInvites } from './routes/invites/get-pending-invites'
 import { rejectInvite } from './routes/invites/reject-invite'
 import { getMembersOrganization } from './routes/members/get-members-organization'
 import { getMembersUnit } from './routes/members/get-members-unit'
+import { getDemand } from './routes/demands/get-demand'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -123,6 +124,7 @@ app.register(getCheckApplicant)
 
 app.register(createDemand)
 app.register(getDemands)
+app.register(getDemand)
 app.register(updateDemand)
 
 app.listen({ port: env.PORT || 4000, host: '0.0.0.0' }).then(() => {

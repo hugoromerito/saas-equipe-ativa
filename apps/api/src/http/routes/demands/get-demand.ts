@@ -6,47 +6,47 @@ import { DemandCategory, DemandPriority, DemandStatus } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 import { UnauthorizedError } from '../_errors/unauthorized-error'
+import { BadRequestError } from '../_errors/bad-request-error'
 
-export async function getDemands(app: FastifyInstance) {
+export async function getDemand(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
     .get(
-      '/organizations/:organizationSlug/units/:unitSlug/demands',
+      '/organizations/:organizationSlug/units/:unitSlug/demands/:demandSlug',
       {
         schema: {
           tags: ['demands'],
-          summary: 'Get demands on unit',
+          summary: 'Get demand on unit',
           security: [{ bearerAuth: [] }],
           params: z.object({
             organizationSlug: z.string(),
             unitSlug: z.string(),
+            demandSlug: z.string(),
           }),
           response: {
             200: z.object({
-              demands: z.array(
-                z.object({
-                  id: z.string().uuid(),
-                  title: z.string(),
-                  description: z.string(),
-                  status: z.nativeEnum(DemandStatus),
-                  priority: z.nativeEnum(DemandPriority),
-                  category: z.nativeEnum(DemandCategory),
-                  cep: z.string().nullable(),
-                  state: z.string().nullable(),
-                  city: z.string().nullable(),
-                  street: z.string().nullable(),
-                  neighborhood: z.string().nullable(),
-                  complement: z.string().nullable(),
-                  number: z.string().nullable(),
-                }),
-              ),
+              demand: z.object({
+                id: z.string().uuid(),
+                title: z.string(),
+                description: z.string(),
+                status: z.nativeEnum(DemandStatus),
+                priority: z.nativeEnum(DemandPriority),
+                category: z.nativeEnum(DemandCategory),
+                cep: z.string().nullable(),
+                state: z.string().nullable(),
+                city: z.string().nullable(),
+                street: z.string().nullable(),
+                neighborhood: z.string().nullable(),
+                complement: z.string().nullable(),
+                number: z.string().nullable(),
+              }),
             }),
           },
         },
       },
-      async (request) => {
-        const { organizationSlug, unitSlug } = request.params
+      async (request, reply) => {
+        const { organizationSlug, unitSlug, demandSlug } = request.params
         const userId = await request.getCurrentUserId()
 
         const { membership } = await request.getUserMembership(organizationSlug)
@@ -59,7 +59,20 @@ export async function getDemands(app: FastifyInstance) {
           )
         }
 
-        const demands = await prisma.demand.findMany({
+        const unit = await prisma.unit.findFirst({
+          where: {
+            slug: unitSlug,
+            organization: {
+              slug: organizationSlug,
+            },
+          },
+        })
+
+        if (!unit) {
+          throw new BadRequestError('Unidade não encontrada na organização.')
+        }
+
+        const demand = await prisma.demand.findFirst({
           select: {
             id: true,
             title: true,
@@ -67,25 +80,24 @@ export async function getDemands(app: FastifyInstance) {
             status: true,
             priority: true,
             category: true,
+            cep: true,
+            state: true,
+            city: true,
             street: true,
+            neighborhood: true,
             complement: true,
             number: true,
-            neighborhood: true,
-            cep: true,
-            city: true,
-            state: true,
           },
           where: {
-            unit: {
-              organization: {
-                slug: organizationSlug,
-              },
-              slug: unitSlug,
-            },
+            id: demandSlug,
           },
         })
 
-        return { demands }
+        if (!demand) {
+          throw new BadRequestError('Demanda não encontrada.')
+        }
+
+        return { demand }
       },
     )
 }
