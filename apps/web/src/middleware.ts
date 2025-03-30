@@ -2,37 +2,40 @@ import { NextResponse, type NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-
   const response = NextResponse.next()
 
-  if (pathname.startsWith('/org')) {
-    const [, , orgSlug] = pathname.split('/')
+  const parts = pathname.split('/')
 
-    response.cookies.set('org', orgSlug)
+  const params = {
+    org: parts[2], // /org/:org
+    unit: parts[4], // /org/:org/units/:unit
+    inviteId: parts[2], // /invites/:inviteId
+    // O valor será definido com base no prefixo anterior
+    applicant: parts[5] === 'applicants' ? parts[6] : undefined,
+    demand: parts[5] === 'demands' ? parts[6] : undefined,
+  }
+
+  // Define se a URL atual corresponde à estrutura de cada rota
+  if (pathname.startsWith('/org')) {
+    if (params.org) response.cookies.set('org', params.org)
+    else response.cookies.delete('org')
+
+    if (params.unit) response.cookies.set('unit', params.unit)
+    else response.cookies.delete('unit')
+
+    if (params.demand) response.cookies.set('demand', params.demand)
+    else response.cookies.delete('demand')
+
+    if (params.applicant) response.cookies.set('applicant', params.applicant)
+    else response.cookies.delete('applicant')
   } else {
     response.cookies.delete('org')
-  }
-
-  if (pathname.startsWith('/org')) {
-    const [, , , , unitSlug] = pathname.split('/')
-
-    response.cookies.set('unit', unitSlug)
-  } else {
     response.cookies.delete('unit')
-  }
-
-  if (pathname.startsWith('/org')) {
-    const [, , , , , , applicantSlug] = pathname.split('/')
-
-    response.cookies.set('applicant', applicantSlug)
-  } else {
     response.cookies.delete('applicant')
   }
 
-  if (pathname.startsWith('/invites')) {
-    const [, , inviteIdSlug] = pathname.split('/')
-
-    response.cookies.set('inviteId', inviteIdSlug)
+  if (pathname.startsWith('/invites') && params.inviteId) {
+    response.cookies.set('inviteId', params.inviteId)
   } else {
     response.cookies.delete('inviteId')
   }

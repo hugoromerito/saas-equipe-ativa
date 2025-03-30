@@ -65,6 +65,10 @@ export async function getCurrentUnit() {
   return (await cookies()).get('unit')?.value ?? null
 }
 
+export async function getCurrentDemand() {
+  return (await cookies()).get('demand')?.value ?? null
+}
+
 export async function getCurrentInviteId() {
   return (await cookies()).get('inviteId')?.value ?? null
 }
