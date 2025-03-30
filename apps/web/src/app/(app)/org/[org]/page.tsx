@@ -1,4 +1,5 @@
 import { Header } from '@/components/header'
+import { UnitList } from './unit-list'
 
 export default async function OrganizationUnits() {
   return (
@@ -12,7 +13,7 @@ export default async function OrganizationUnits() {
     <>
       <Header />
       <main className="">
-        <p className="text-muted-foreground text-sm">Selecione a unidade</p>
+        <UnitList />
       </main>
     </>
   )
