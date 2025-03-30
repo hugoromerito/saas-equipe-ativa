@@ -11,7 +11,7 @@ export function middleware(request: NextRequest) {
     unit: parts[4], // /org/:org/units/:unit
     inviteId: parts[2], // /invites/:inviteId
     // O valor será definido com base no prefixo anterior
-    applicant: parts[5] === 'applicants' ? parts[6] : undefined,
+    applicant: parts[5] === 'applicant' ? parts[6] : undefined,
     demand: parts[5] === 'demands' ? parts[6] : undefined,
   }
 

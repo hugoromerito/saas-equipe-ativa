@@ -16,6 +16,37 @@ interface GetDemandResponse {
     street: string | null
     complement: string | null
     number: string | null
+    owner: {
+      id: string
+      name: string | null
+      email: string
+      avatarUrl: string | null
+    } | null
+    unit: {
+      id: string
+      name: string
+      slug: string
+      organization: {
+        id: string
+        name: string
+        slug: string
+        avatarUrl: string | null
+      }
+    }
+    applicant: {
+      id: string
+      name: string
+      birthdate: Date
+      avatarUrl: string | null
+    }
+    member: {
+      user: {
+        id: string
+        name: string | null
+        email: string
+        avatarUrl: string | null
+      }
+    } | null
   }
 }
 

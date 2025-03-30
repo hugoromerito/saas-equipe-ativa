@@ -2,7 +2,12 @@ import { auth } from '@/http/middlewares/auth'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { DemandCategory, DemandPriority, DemandStatus } from '@prisma/client'
+import {
+  DemandCategory,
+  DemandPriority,
+  DemandStatus,
+  Role,
+} from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 import { UnauthorizedError } from '../_errors/unauthorized-error'
@@ -40,6 +45,47 @@ export async function getDemand(app: FastifyInstance) {
                 neighborhood: z.string().nullable(),
                 complement: z.string().nullable(),
                 number: z.string().nullable(),
+                createdAt: z.date(),
+                updatedAt: z.date().nullable(),
+
+                owner: z
+                  .object({
+                    id: z.string().uuid(),
+                    name: z.string().nullable(),
+                    email: z.string().email(),
+                    avatarUrl: z.string().url().nullable(),
+                  })
+                  .nullable(),
+
+                unit: z.object({
+                  id: z.string().uuid(),
+                  name: z.string(),
+                  slug: z.string(),
+                  organization: z.object({
+                    id: z.string().uuid(),
+                    name: z.string(),
+                    slug: z.string(),
+                    avatarUrl: z.string().url().nullable(),
+                  }),
+                }),
+
+                applicant: z.object({
+                  id: z.string().uuid(),
+                  name: z.string(),
+                  birthdate: z.date(),
+                  avatarUrl: z.string().url().nullable(),
+                }),
+
+                member: z
+                  .object({
+                    user: z.object({
+                      id: z.string().uuid(),
+                      name: z.string().nullable(),
+                      email: z.string().email(),
+                      avatarUrl: z.string().url().nullable(),
+                    }),
+                  })
+                  .nullable(),
               }),
             }),
           },
@@ -73,23 +119,59 @@ export async function getDemand(app: FastifyInstance) {
         }
 
         const demand = await prisma.demand.findFirst({
-          select: {
-            id: true,
-            title: true,
-            description: true,
-            status: true,
-            priority: true,
-            category: true,
-            cep: true,
-            state: true,
-            city: true,
-            street: true,
-            neighborhood: true,
-            complement: true,
-            number: true,
-          },
           where: {
             id: demandSlug,
+            unit: {
+              slug: unitSlug,
+              organization: {
+                slug: organizationSlug,
+              },
+            },
+          },
+          include: {
+            owner: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                avatarUrl: true,
+              },
+            },
+            unit: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+                organization: {
+                  select: {
+                    id: true,
+                    name: true,
+                    slug: true,
+                    avatarUrl: true,
+                  },
+                },
+              },
+            },
+            applicant: {
+              select: {
+                id: true,
+                name: true,
+                birthdate: true,
+                avatarUrl: true,
+              },
+            },
+            member: {
+              select: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    avatarUrl: true,
+                  },
+                },
+              },
+            },
           },
         })
 

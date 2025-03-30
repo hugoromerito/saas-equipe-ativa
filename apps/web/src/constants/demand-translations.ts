@@ -22,7 +22,7 @@ export const PRIORITY_OPTIONS = [
 ]
 
 export const STATUS_OPTIONS = [
-  { value: 'PENDING', label: 'Pendente' },
+  { value: 'PENDING', label: 'Aguardando atendimento' },
   { value: 'IN_PROGRESS', label: 'Em andamento' },
   { value: 'RESOLVED', label: 'Resolvida' },
   { value: 'REJECTED', label: 'Rejeitada' },

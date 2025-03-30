@@ -17,6 +17,7 @@ import {
   translateStatus,
 } from '@/constants/demand-translations'
 import { BadgeDemand } from '@/components/badge-demand'
+import Link from 'next/link'
 
 export async function DemandList() {
   const currentOrg = await getCurrentOrg()
@@ -51,9 +52,13 @@ export async function DemandList() {
               {demands.map((demand) => (
                 <TableRow key={demand.id}>
                   <TableCell className="py-2.5 font-medium">
-                    {demand.title}
+                    <Link
+                      href={`/org/${currentOrg}/unit/${currentUnit}/demands/${demand.id}`}
+                    >
+                      {demand.title}
+                    </Link>
                   </TableCell>
-                  <TableCell className="text-muted-foreground py-2.5 text-sm">
+                  <TableCell className="text-muted-foreground max-w-[300px] truncate py-2.5 text-sm">
                     {demand.description}
                   </TableCell>
                   <TableCell>
