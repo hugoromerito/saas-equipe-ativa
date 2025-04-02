@@ -41,13 +41,13 @@ Content-Type: application/json
 
 
 ### Teste de autenticação com Google OAuth
-POST http://localhost:3333/organizations/equipe-ea/units/usf/invites
+POST http://localhost:3333/organizations/equipe-ea/units/teste/invites
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NjA0ODIxZS0yNDk5LTQyYWYtYmY2ZS02NzVhMjMyZGY2NWUiLCJpYXQiOjE3NDIzMjEwMTEsImV4cCI6MTc0MjkyNTgxMX0.2Hj9kk9E_gDlBeQxFo8xpAF-1ORaTLTEoQ11lx2kjx4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MjViY2Q0Yi01YTM5LTQ4NDMtYWNmNS1lYzdiMWY2NWIyMjciLCJpYXQiOjE3NDMzNzgxODEsImV4cCI6MTc0Mzk4Mjk4MX0.8aJxka7PyNjraL2zeyKtVnvm7wXSoahCyhcCDaDQbDI
 
 {
-  "email": "stuart@gmail.com",
-  "role": "CLERK"
+  "email": "hugoxvida@gmail.com",
+  "role": "ADMIN"
 }
 
 ### Obter URL de autenticação do Google
@@ -66,7 +66,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MjViY2Q0Y
 
 GET http://localhost:3333/organizations/equipe-ea/units/teste/members
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MjViY2Q0Yi01YTM5LTQ4NDMtYWNmNS1lYzdiMWY2NWIyMjciLCJpYXQiOjE3NDI5NTg3ODMsImV4cCI6MTc0MzU2MzU4M30.ZNd7409DcqUNy8aCDhCA3ySaWxBhFXX63_9J97Tjzt4
-'
+
 
 
 ###
@@ -74,3 +74,15 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MjViY2Q0Y
 
 POST http://localhost:3333/invites/cb1dc80b-e4af-48f7-9e77-0f98cbd5bbc3/accept
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTk1YzYxMC1lYTJiLTRhZTMtYmE4NS1mMjI2OGI2ZWZmOTAiLCJpYXQiOjE3NDIzOTQ4NTUsImV4cCI6MTc0Mjk5OTY1NX0.X2RliSz5NFb4s52Tj0Zg-lEgvlFgc-MoMq13UFOf1-A
+
+
+###
+
+
+PATCH http://localhost:3333/organizations/equipe-ea/units/teste/demands/ed0b4e0e-053b-47b4-ac01-ed617a8ac305
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MjViY2Q0Yi01YTM5LTQ4NDMtYWNmNS1lYzdiMWY2NWIyMjciLCJpYXQiOjE3NDMzNzgxODEsImV4cCI6MTc0Mzk4Mjk4MX0.8aJxka7PyNjraL2zeyKtVnvm7wXSoahCyhcCDaDQbDI
+
+{
+  "status": "IN_PROGRESS"
+}
