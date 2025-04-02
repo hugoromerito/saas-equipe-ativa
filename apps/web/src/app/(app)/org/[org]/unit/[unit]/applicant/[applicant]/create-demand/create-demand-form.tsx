@@ -14,12 +14,14 @@ import { Textarea } from '@/components/ui/textarea'
 import { ComboBoxCategory } from '@/components/switchs/category-switcher'
 import { ComboBoxPriority } from '@/components/switchs/priority-switcher'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface DemandFormProps {
   initialData?: DemandSchema
 }
 
 export function DemandForm({ initialData }: DemandFormProps) {
+  const router = useRouter()
   const [cepInput, setCepInput] = useState('')
 
   // Estado para armazenar os dados do endereço
@@ -64,6 +66,16 @@ export function DemandForm({ initialData }: DemandFormProps) {
     }
   }, [cepInput])
 
+  useEffect(() => {
+    if (success) {
+      const timeout = setTimeout(() => {
+        router.back()
+      }, 1000) // tempo para mostrar o alerta de sucesso
+
+      return () => clearTimeout(timeout)
+    }
+  }, [success])
+
   return (
     <>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -86,7 +98,7 @@ export function DemandForm({ initialData }: DemandFormProps) {
           </Alert>
         )}
         <div className="space-y-1">
-          <Label htmlFor="title">Título</Label>
+          <Label htmlFor="title">Título da demanda</Label>
           <Input name="title" id="title" />
 
           {errors?.title && (
