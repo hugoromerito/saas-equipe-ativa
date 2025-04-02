@@ -9,6 +9,7 @@ import { getDemand } from '@/http/get-demand'
 import Link from 'next/link'
 import { MapPin, User, Users, Landmark, Building2, Mail } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { DrawerDemandStatus } from './drawer-demand-status'
 
 export async function DemandDetails() {
   const currentOrg = await getCurrentOrg()
@@ -28,11 +29,11 @@ export async function DemandDetails() {
     <div className="w-full space-y-6">
       <h2 className="text-2xl font-bold">Detalhes da Demanda</h2>
 
-      <div className="space-y-4 rounded-2xl border bg-white p-4 shadow-sm">
+      <div className="space-y-4 rounded-2xl border p-4 shadow-sm">
         {/* Título e descrição */}
         <div className="space-y-2">
           <h3 className="text-xl font-semibold">{demand.title}</h3>
-          <p className="text-muted-foreground">{demand.description}</p>
+          <p className="text-primary">{demand.description}</p>
         </div>
 
         {/* Badges */}
@@ -46,13 +47,6 @@ export async function DemandDetails() {
           <BadgeDemand variant="secondary">
             {translateCategory(demand.category)}
           </BadgeDemand>
-
-          {/* <DemandStatusControl
-            currentStatus={demand.status}
-            organizationSlug={currentOrg!}
-            unitSlug={currentUnit!}
-            demandSlug={currentDemand!}
-          /> */}
         </div>
 
         {/* Endereço */}
@@ -113,7 +107,12 @@ export async function DemandDetails() {
               <p>{demand.applicant.name}</p>
               <p className="text-muted-foreground text-xs">
                 Nascimento:{' '}
-                {new Date(demand.applicant.birthdate).toLocaleDateString()}
+                {new Date(demand.applicant.birthdate)
+                  .toISOString()
+                  .slice(0, 10)
+                  .split('-')
+                  .reverse()
+                  .join('/')}
               </p>
             </div>
           </div>
@@ -191,7 +190,35 @@ export async function DemandDetails() {
             </div>
           </div>
         )}
+
+        {/* Datas de criação e atualização */}
+        <div className="text-muted-foreground border-t pt-4 text-sm">
+          <p>
+            <strong>Criado em:</strong>{' '}
+            {new Date(demand.createdAt).toLocaleDateString('pt-BR', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+          </p>
+          <p>
+            <strong>Atualizado em:</strong>{' '}
+            {new Date(demand.updatedAt!).toLocaleDateString('pt-BR', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+          </p>
+        </div>
       </div>
+      {/* {permissions?.can('update', 'Demand') && <DrawerDemandStatus />} */}
+      {!['resolved', 'rejected'].includes(demand.status.toLowerCase()) && (
+        <DrawerDemandStatus />
+      )}
     </div>
   )
 }

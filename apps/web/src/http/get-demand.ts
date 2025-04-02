@@ -16,6 +16,8 @@ interface GetDemandResponse {
     street: string | null
     complement: string | null
     number: string | null
+    createdAt: Date
+    updatedAt: Date | null
     owner: {
       id: string
       name: string | null
