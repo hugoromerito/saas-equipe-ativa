@@ -42,11 +42,11 @@ export async function updateDemand(app: FastifyInstance) {
 
           const { cannot } = getUserPermissions(userId, membership.role)
 
-          // if (cannot('update', 'Demand')) {
-          //   throw new UnauthorizedError(
-          //     'Você não possui permissão para atualizar esta demanda.',
-          //   )
-          // }
+          if (cannot('update', 'Demand')) {
+            throw new UnauthorizedError(
+              'Você não possui permissão para atualizar esta demanda.',
+            )
+          }
 
           const unit = await prisma.unit.findFirst({
             where: {
