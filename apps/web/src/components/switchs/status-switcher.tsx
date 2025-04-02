@@ -26,56 +26,69 @@ type Status = {
 }
 
 const statusOptions: Status[] = [
-  { value: 'PENDING', label: 'Aguardando atendimento' },
-  { value: 'IN_PROGESS', label: 'Em andamento' },
+  // { value: 'PENDING', label: 'Aguardando atendimento' },
+  { value: 'IN_PROGRESS', label: 'Em andamento' },
   { value: 'RESOLVED', label: 'Resolvida' },
   { value: 'REJECTED', label: 'Rejeitada' },
 ]
 
-export function ComboBoxStatus() {
+export function ComboBoxStatus({ id, name }: { id: string; name: string }) {
   const [open, setOpen] = React.useState(false)
   const isDesktop = useMediaQuery('(min-width: 768px)')
   const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
     null,
   )
 
-  if (isDesktop) {
-    return (
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button variant="outline" className="w-[200px] justify-center">
-            {selectedStatus ? (
-              <>{selectedStatus.label}</>
-            ) : (
-              <>Selecionar status</>
-            )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="center">
-          <StatusList setOpen={setOpen} setSelectedStatus={setSelectedStatus} />
-        </PopoverContent>
-      </Popover>
-    )
-  }
-
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <DialogTitle hidden>Status</DialogTitle>
-      <DrawerTrigger asChild>
-        <Button variant="outline" className="w-[150px] justify-start">
-          {selectedStatus ? (
-            <>{selectedStatus.label}</>
-          ) : (
-            <>Selecionar status</>
-          )}
-        </Button>
-      </DrawerTrigger>
-      <DrawerContent>
-        <div className="mt-4 border-t">
-          <StatusList setOpen={setOpen} setSelectedStatus={setSelectedStatus} />
-        </div>
-      </DrawerContent>
-    </Drawer>
+    <>
+      <input
+        type="hidden"
+        id={id}
+        name={name}
+        value={selectedStatus?.value || ''}
+      />
+
+      {isDesktop ? (
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="w-80 justify-center truncate">
+              {selectedStatus ? (
+                <>{selectedStatus.label}</>
+              ) : (
+                <>Selecionar status</>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-80 p-0" align="center">
+            <StatusList
+              setOpen={setOpen}
+              setSelectedStatus={setSelectedStatus}
+            />
+          </PopoverContent>
+        </Popover>
+      ) : (
+        <Drawer open={open} onOpenChange={setOpen}>
+          <DialogTitle hidden>Status</DialogTitle>
+          <DrawerTrigger asChild>
+            <Button variant="outline" className="w-80 justify-center truncate">
+              {selectedStatus ? (
+                <>{selectedStatus.label}</>
+              ) : (
+                <>Selecionar status</>
+              )}
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent>
+            <div className="mt-4 border-t">
+              <StatusList
+                setOpen={setOpen}
+                setSelectedStatus={setSelectedStatus}
+              />
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
+    </>
   )
 }
 
@@ -88,7 +101,7 @@ function StatusList({
 }) {
   return (
     <Command>
-      <CommandInput placeholder="Filtrar status..." />
+      <CommandInput placeholder="Filtrar categoria..." />
       <CommandList>
         <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
         <CommandGroup>
@@ -98,7 +111,7 @@ function StatusList({
               value={status.value}
               onSelect={(value) => {
                 setSelectedStatus(
-                  statusOptions.find((priority) => priority.value === value) ||
+                  statusOptions.find((status) => status.value === value) ||
                     null,
                 )
                 setOpen(false)
