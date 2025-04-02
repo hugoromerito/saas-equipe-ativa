@@ -20,8 +20,13 @@ export async function PendingInvites() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size={'icon'} variant={'ghost'} className="">
+        <Button size={'icon'} variant={'ghost'} className="relative">
           <UserPlus2 className="size-4" />
+          {invites.length > 0 && (
+            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
+              {invites.length}
+            </span>
+          )}
           <span className="sr-only">Convites pendentes</span>
         </Button>
       </DropdownMenuTrigger>
