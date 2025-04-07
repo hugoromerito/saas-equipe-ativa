@@ -20,7 +20,7 @@ const demandSchema = z.object({
     .min(4, { message: 'Por favor, inclua o título da demanda.' }),
   description: z
     .string()
-    .min(30, { message: 'Por favor, detalhe a solicitação.' }),
+    .min(10, { message: 'Por favor, detalhe a solicitação.' }),
   priority: demandPrioritySchema.refine((val) => !!val, {
     message: 'Por favor, selecione a prioridade da demanda.',
   }),

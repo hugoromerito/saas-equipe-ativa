@@ -74,6 +74,7 @@ export async function getDemand(app: FastifyInstance) {
                   name: z.string(),
                   birthdate: z.date(),
                   avatarUrl: z.string().url().nullable(),
+                  phone: z.string(),
                 }),
 
                 member: z
@@ -158,6 +159,7 @@ export async function getDemand(app: FastifyInstance) {
                 name: true,
                 birthdate: true,
                 avatarUrl: true,
+                phone: true,
               },
             },
             member: {

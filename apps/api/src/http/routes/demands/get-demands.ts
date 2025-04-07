@@ -85,6 +85,29 @@ export async function getDemands(app: FastifyInstance) {
           },
         })
 
+        // Define a ordem personalizada
+        const priorityOrder = {
+          URGENT: 1,
+          HIGH: 2,
+          MEDIUM: 3,
+          LOW: 4,
+        }
+
+        const statusOrder = {
+          PENDING: 1,
+          IN_PROGRESS: 2,
+          RESOLVED: 3,
+          REJECTED: 4,
+        }
+
+        // Ordenar por status, e dentro do status, por prioridade
+        demands.sort((a, b) => {
+          const statusDiff = statusOrder[a.status] - statusOrder[b.status]
+          if (statusDiff !== 0) return statusDiff
+
+          return priorityOrder[a.priority] - priorityOrder[b.priority]
+        })
+
         return { demands }
       },
     )

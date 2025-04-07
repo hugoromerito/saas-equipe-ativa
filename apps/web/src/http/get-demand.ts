@@ -40,6 +40,7 @@ interface GetDemandResponse {
       name: string
       birthdate: Date
       avatarUrl: string | null
+      phone: string
     }
     member: {
       user: {

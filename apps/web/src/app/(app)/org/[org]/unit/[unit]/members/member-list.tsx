@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table'
 import { getMembers } from '@/http/get-members'
 import { getMembership } from '@/http/get-membership'
 import { getOrganization } from '@/http/get-organization'
+import { translateRole } from '@/constants/role-translations'
 
 export async function MemberList() {
   const currentOrg = await getCurrentOrg()
@@ -70,12 +71,16 @@ export async function MemberList() {
                       <span className="inline-flex items-center gap-2 font-medium">
                         {member.name}
                         {member.userId === membership.userId && ' (eu)'}
-                        {organization.ownerId === member.userId && (
+                        {/* {organization.ownerId === member.userId && (
                           <span className="text-muted-foreground inline-flex items-center gap-1 text-xs">
                             <Crown className="size-3" />
                             Owner
                           </span>
-                        )}
+                        )} */}
+                        <span className="text-muted-foreground inline-flex items-center gap-1 text-xs">
+                          {/* <Crown className="size-3" /> */}
+                          {translateRole(member.role)}
+                        </span>
                       </span>
                       <span className="text-muted-foreground text-xs">
                         {member.email}

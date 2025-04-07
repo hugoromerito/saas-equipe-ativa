@@ -34,6 +34,7 @@ export function ApplicantForm({
   const [isPending, startTransition] = useTransition()
 
   // Estados para os campos com checkbox
+  const [name, setName] = useState('')
   const [mother, setMother] = useState('')
   const [motherNull, setMotherNull] = useState(false)
   const [father, setFather] = useState('')
@@ -98,6 +99,17 @@ export function ApplicantForm({
     return digits
       .replace(/(\d{4})(\d)/, '$1 $2')
       .replace(/(\d{4})(\d)/, '$1 $2')
+  }
+
+  function formatName(value: string): string {
+    return value
+      .replace(/[^a-zA-ZÀ-ÿ\s]/g, '') // mantém apenas letras e espaços
+      .replace(/\s+/g, ' ') // substitui múltiplos espaços por 1
+      .trimStart() // remove espaço no início (mantém entre palavras)
+      .toLowerCase()
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
   }
 
   const handleCpfSubmit = (e: React.FormEvent) => {
@@ -187,7 +199,13 @@ export function ApplicantForm({
 
           <div className="space-y-1">
             <Label htmlFor="name">Nome completo</Label>
-            <Input name="name" id="name" />
+            <Input
+              name="name"
+              id="name"
+              value={name}
+              onChange={(e) => setName(formatName(e.target.value))}
+            />
+
             {errors?.name && (
               <p className="text-xs font-medium text-red-500 dark:text-red-400">
                 {errors.name[0]}
@@ -255,7 +273,7 @@ export function ApplicantForm({
               <Input
                 id="mother"
                 value={motherNull ? 'null' : mother}
-                onChange={(e) => setMother(e.target.value)}
+                onChange={(e) => setMother(formatName(e.target.value))}
                 disabled={motherNull}
               />
               <input
@@ -293,7 +311,7 @@ export function ApplicantForm({
               <Input
                 id="father"
                 value={fatherNull ? 'null' : father}
-                onChange={(e) => setFather(e.target.value)}
+                onChange={(e) => setFather(formatName(e.target.value))}
                 disabled={fatherNull}
               />
               <input
@@ -330,8 +348,11 @@ export function ApplicantForm({
             <div className="flex items-center gap-2">
               <Input
                 id="ticket"
-                value={ticketNull ? 'null' : ticket}
-                onChange={(e) => setTicket(e.target.value)}
+                value={ticketNull ? 'null' : formatTicket(ticket)}
+                onChange={(e) => {
+                  const value = strip(e.target.value).slice(0, 12)
+                  setTicket(value)
+                }}
                 disabled={ticketNull}
               />
               <input

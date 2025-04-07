@@ -23,6 +23,8 @@ interface DemandFormProps {
 export function DemandForm({ initialData }: DemandFormProps) {
   const router = useRouter()
   const [cepInput, setCepInput] = useState('')
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
 
   // Estado para armazenar os dados do endereço
   const [address, setAddress] = useState({
@@ -99,7 +101,22 @@ export function DemandForm({ initialData }: DemandFormProps) {
         )}
         <div className="space-y-1">
           <Label htmlFor="title">Título da demanda</Label>
-          <Input name="title" id="title" />
+          <Input
+            name="title"
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            onBlur={() => {
+              const formatted = title
+                .trim() // remove espaços no início/fim
+                .replace(/\s+/g, ' ') // remove espaços duplicados
+                .toLowerCase()
+                .split(' ')
+                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ')
+              setTitle(formatted)
+            }}
+          />
 
           {errors?.title && (
             <p className="text-xs font-medium text-red-500 dark:text-red-400">
@@ -111,8 +128,20 @@ export function DemandForm({ initialData }: DemandFormProps) {
           <Label htmlFor="description">Descrição</Label>
           <Textarea
             name="description"
-            placeholder="Descreva a solicitação detalhadamente."
             id="description"
+            placeholder="Descreva a solicitação detalhadamente."
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            onBlur={() => {
+              const formatted = description
+                .trim()
+                .replace(/\s+/g, ' ')
+                .toLowerCase() // tudo minúsculo primeiro
+                .replace(/(?:^|[.?!]\s*)(\p{Ll})/gu, (match) =>
+                  match.toUpperCase(),
+                )
+              setDescription(formatted)
+            }}
           />
 
           {errors?.description && (
@@ -141,7 +170,7 @@ export function DemandForm({ initialData }: DemandFormProps) {
           </div>
         </div>
         <div className="space-y-1">
-          <Label htmlFor="cep">CEP</Label>
+          <Label htmlFor="cep">CEP - Endereço da Demanda</Label>
           <Input
             name="cep"
             id="cep"

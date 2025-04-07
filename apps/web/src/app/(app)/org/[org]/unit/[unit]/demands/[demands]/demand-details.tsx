@@ -7,7 +7,15 @@ import {
 } from '@/constants/demand-translations'
 import { getDemand } from '@/http/get-demand'
 import Link from 'next/link'
-import { MapPin, User, Users, Landmark, Building2, Mail } from 'lucide-react'
+import {
+  MapPin,
+  User,
+  Users,
+  Landmark,
+  Building2,
+  Mail,
+  MessageCircle,
+} from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { DrawerDemandStatus } from './drawer-demand-status'
 
@@ -24,6 +32,23 @@ export async function DemandDetails() {
 
   const address = `${demand.street}, ${demand.number}, ${demand.neighborhood}, ${demand.city}, ${demand.state}, ${demand.cep}`
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
+
+  // const message = `Olá ${demand.applicant.name}, me chamo ${demand} e estou entrando em contato referente ao pedido (${demand.title}) realizado.`
+  const phone = demand.applicant.phone
+  // const whatsappLink = `https://api.whatsapp.com/send/?phone=55${phone}&text=${encodeURIComponent(message)}&type=phone_number&app_absent=0`
+  const whatsappLink = `https://api.whatsapp.com/send/?phone=55${phone}&text&type=phone_number&app_absent=0`
+
+  function strip(value: string): string {
+    return value.replace(/\D/g, '') // remove tudo que não for dígito
+  }
+
+  function formatPhone(value: string) {
+    const digits = strip(value).slice(0, 11) // garante que só há 8 dígitos (YYYYMMDD)
+    const ddd = digits.slice(0, 2)
+    const first = digits.slice(2, 7)
+    const second = digits.slice(7, 11)
+    return `(${ddd}) ${first}-${second}`
+  }
 
   return (
     <div className="w-full space-y-6">
@@ -50,44 +75,56 @@ export async function DemandDetails() {
         </div>
 
         {/* Endereço */}
-        <div className="text-muted-foreground grid grid-cols-2 gap-4 pt-4 text-sm sm:grid-cols-3">
-          <div>
-            <strong>CEP:</strong> {demand.cep}
-          </div>
-          <div>
-            <strong>Cidade:</strong> {demand.city}
-          </div>
-          <div>
-            <strong>Bairro:</strong> {demand.neighborhood}
-          </div>
-          <div>
-            <strong>Rua:</strong> {demand.street}
-          </div>
-          <div>
-            <strong>Número:</strong> {demand.number}
-          </div>
-          {demand.complement && (
-            <div>
-              <strong>Complemento:</strong> {demand.complement}
+        {demand.cep ||
+          demand.complement ||
+          demand.street ||
+          demand.number ||
+          (demand.neighborhood && (
+            <div className="text-muted-foreground grid grid-cols-2 gap-4 pt-4 text-sm sm:grid-cols-3">
+              <div>
+                <strong>CEP:</strong> {demand.cep}
+              </div>
+              <div>
+                <strong>Cidade:</strong> {demand.city}
+              </div>
+              <div>
+                <strong>Bairro:</strong> {demand.neighborhood}
+              </div>
+              <div>
+                <strong>Rua:</strong> {demand.street}
+              </div>
+              <div>
+                <strong>Número:</strong> {demand.number}
+              </div>
+              {demand.complement && (
+                <div>
+                  <strong>Complemento:</strong> {demand.complement}
+                </div>
+              )}
+              <div>
+                <strong>Estado:</strong> {demand.state}
+              </div>
             </div>
-          )}
-          <div>
-            <strong>Estado:</strong> {demand.state}
-          </div>
-        </div>
+          ))}
 
         {/* Link do mapa */}
-        <div className="pt-4">
-          <Link
-            href={mapsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary inline-flex items-center gap-1 hover:underline"
-          >
-            <MapPin className="h-4 w-4" />
-            Ver no Google Maps
-          </Link>
-        </div>
+        {demand.cep ||
+          demand.complement ||
+          demand.street ||
+          demand.number ||
+          (demand.neighborhood && (
+            <div className="pt-4">
+              <Link
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary inline-flex items-center gap-1 hover:underline"
+              >
+                <MapPin className="h-4 w-4" />
+                Ver no Google Maps
+              </Link>
+            </div>
+          ))}
 
         {/* Solicitante */}
         <div className="space-y-2 border-t pt-4">
@@ -114,7 +151,23 @@ export async function DemandDetails() {
                   .reverse()
                   .join('/')}
               </p>
+              <p className="text-muted-foreground text-xs">
+                Telefone: {formatPhone(demand.applicant.phone)}
+              </p>
             </div>
+          </div>
+
+          {/* Link do mapa */}
+          <div className="pt-4">
+            <Link
+              href={whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary inline-flex items-center gap-1 hover:underline"
+            >
+              <MessageCircle className="h-4 w-4" />
+              Whatsapp
+            </Link>
           </div>
         </div>
 
