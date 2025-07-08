@@ -10,7 +10,6 @@ import {
   getCurrentOrg,
   getCurrentUnit,
 } from '@/auth/auth'
-import { demandCategorySchema, demandPrioritySchema } from '@saas/auth'
 import { applicantSchema } from '@saas/auth/src/models/applicant'
 import { getApplicant } from '@/http/get-applicant'
 
@@ -21,12 +20,6 @@ const demandSchema = z.object({
   description: z
     .string()
     .min(10, { message: 'Por favor, detalhe a solicitação.' }),
-  priority: demandPrioritySchema.refine((val) => !!val, {
-    message: 'Por favor, selecione a prioridade da demanda.',
-  }),
-  category: demandCategorySchema.refine((val) => !!val, {
-    message: 'Por favor, selecione a categoria da demanda.',
-  }),
   street: z.string().nullable(),
   complement: z.string().nullable(),
   number: z.string().nullable(),
@@ -54,8 +47,6 @@ export async function createDemandAction(data: FormData) {
   const {
     title,
     description,
-    priority,
-    category,
     street,
     complement,
     number,
@@ -72,8 +63,6 @@ export async function createDemandAction(data: FormData) {
       applicantSlug: currentApplicant!,
       title,
       description,
-      priority,
-      category,
       street,
       complement,
       number,

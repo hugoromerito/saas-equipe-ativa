@@ -11,8 +11,6 @@ import { Label } from '@/components/ui/label'
 import { useFormState } from '@/hooks/use-form-state'
 import { createDemandAction, type DemandSchema } from './actions'
 import { Textarea } from '@/components/ui/textarea'
-import { ComboBoxCategory } from '@/components/switchs/category-switcher'
-import { ComboBoxPriority } from '@/components/switchs/priority-switcher'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -150,25 +148,7 @@ export function DemandForm({ initialData }: DemandFormProps) {
             </p>
           )}
         </div>
-        <div className="flex flex-col items-center justify-center gap-4 space-y-1 md:flex md:flex-row md:gap-8">
-          <div className="flex flex-col items-center justify-center gap-1">
-            <ComboBoxPriority id="priority" name="priority" />
-            {errors?.priority && (
-              <p className="text-xs font-medium text-red-500 dark:text-red-400">
-                Por favor, selecione a prioridade da demanda.
-              </p>
-            )}
-          </div>
-          <div className="flex flex-col items-center justify-center gap-1">
-            <ComboBoxCategory id="category" name="category" />
 
-            {errors?.category && (
-              <p className="text-xs font-medium text-red-500 dark:text-red-400">
-                Por favor, selecione a categoria da demanda
-              </p>
-            )}
-          </div>
-        </div>
         <div className="space-y-1">
           <Label htmlFor="cep">CEP - Endereço da Demanda</Label>
           <Input

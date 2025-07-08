@@ -1,4 +1,3 @@
-import type { DemandCategory, DemandPriority, DemandStatus } from '@saas/auth'
 import { api } from './api-client'
 
 interface CreateDemandRequest {
@@ -7,8 +6,6 @@ interface CreateDemandRequest {
   applicantSlug: String
   title: String
   description: String
-  priority: DemandPriority
-  category: DemandCategory
   cep: String | null
   state: String | null
   city: String | null
@@ -26,8 +23,6 @@ export async function createDemand({
   applicantSlug,
   title,
   description,
-  priority,
-  category,
   street,
   complement,
   number,
@@ -45,8 +40,6 @@ export async function createDemand({
         applicantSlug,
         title,
         description,
-        priority,
-        category,
         street,
         complement,
         number,
